@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MERIDIAN — Capability Workforce Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        navy: {
+                            50: '#f0f4f8', 100: '#d9e2ec', 200: '#bcccdc', 300: '#9fb3c8',
+                            400: '#829ab1', 500: '#627d98', 600: '#486581', 700: '#334e68',
+                            800: '#243b53', 900: '#102a43', 950: '#070f1a'
+                        },
+                        accent: {
+                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca'
+                        },
+                        brand: {
+                            500: '#6366f1', 600: '#4f46e5'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c7d2fe; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #2d3a5a; }
+        .fade-in { animation: fadeIn 0.25s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .matrix-bg { background-image: linear-gradient(to right, #e2e8f0 1px, transparent 1px), linear-gradient(to bottom, #e2e8f0 1px, transparent 1px); background-size: 25% 25%; }
+        .dark .matrix-bg { background-image: linear-gradient(to right, #1e293b 1px, transparent 1px), linear-gradient(to bottom, #1e293b 1px, transparent 1px); }
+
+        /* Premium sidebar gradient */
+        aside {
+            background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);
+        }
+        .dark aside {
+            background: linear-gradient(180deg, #0f1e35 0%, #0a1525 100%);
+        }
+
+        /* Premium main bg */
+        body.light #main-scroll {
+            background: linear-gradient(135deg, #f8faff 0%, #eef2ff 40%, #f0fdf4 100%);
+        }
+        .dark #main-scroll {
+            background: linear-gradient(135deg, #07101d 0%, #0a1525 60%, #071018 100%);
+        }
+
+        /* Nav button truncate fix */
+        .nav-btn span { 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            text-align: left;
+        }
+        .nav-btn { text-align: left; }
+
+        /* Active nav glow */
+        .nav-active {
+            background: linear-gradient(90deg, #eef2ff, #e0e7ff) !important;
+            color: #4f46e5 !important;
+            box-shadow: inset 3px 0 0 #4f46e5;
+        }
+        .dark .nav-active {
+            background: linear-gradient(90deg, rgba(99,102,241,0.15), rgba(99,102,241,0.05)) !important;
+            color: #a5b4fc !important;
+            box-shadow: inset 3px 0 0 #6366f1;
+        }
+
+        /* Card polish */
+        .card { 
+            background: white; 
+            border-radius: 14px; 
+            border: 1px solid #e8ecf4;
+            box-shadow: 0 1px 4px rgba(99,102,241,0.04), 0 4px 20px rgba(0,0,0,0.04);
+            transition: box-shadow 0.2s;
+        }
+        .dark .card { 
+            background: #0f1e35; 
+            border-color: #1a2d4a;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+        .card:hover { box-shadow: 0 2px 8px rgba(99,102,241,0.10), 0 8px 32px rgba(0,0,0,0.07); }
+
+        /* Premium topbar */
+        header {
+            background: rgba(255,255,255,0.85) !important;
+            backdrop-filter: blur(20px) !important;
+            border-bottom: 1px solid rgba(99,102,241,0.08) !important;
+        }
+        .dark header {
+            background: rgba(10,21,37,0.85) !important;
+            border-bottom: 1px solid rgba(99,102,241,0.12) !important;
+        }
+
+        /* Profile area */
+        .sidebar-footer {
+            background: linear-gradient(135deg, #f0f4ff, #faf5ff);
+            border-top: 1px solid #e8ecf4;
+        }
+        .dark .sidebar-footer {
+            background: linear-gradient(135deg, #0a1525, #070f1a);
+            border-top: 1px solid #1a2d4a;
+        }
+    </style>
+</head>
+<body class="text-slate-900 dark:text-slate-100 font-sans h-screen flex overflow-hidden transition-colors duration-200">
+
+    <!-- OVERLAYS & MODALS -->
+    <div id="global-overlay" class="fixed inset-0 bg-navy-900/40 dark:bg-black/60 backdrop-blur-sm z-40 hidden transition-opacity" onclick="closeAllDrawers()"></div>
+
+    <div id="drawer-evidence" class="fixed right-0 top-0 bottom-0 w-96 bg-white dark:bg-navy-900 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col" style="border-left:1px solid #e8ecf4;">
+        <div class="p-6 border-b border-slate-100 dark:border-navy-700 flex justify-between items-center">
+            <h3 class="text-lg font-semibold">Evidence & Confidence</h3>
+            <button onclick="closeAllDrawers()" class="p-2 hover:bg-slate-100 dark:hover:bg-navy-800 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+        </div>
+        <div class="p-6 flex-1 overflow-y-auto space-y-6" id="drawer-evidence-content">
+            <!-- Dynamic Content -->
+        </div>
+    </div>
+
+    <div id="modal-action" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-navy-900/60 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="bg-white dark:bg-navy-900 p-8 rounded-2xl shadow-2xl w-[480px] relative z-10 fade-in" style="border:1px solid #e8ecf4;">
+            <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                <i data-lucide="alert-circle" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2" id="modal-title">Confirm Action</h3>
+            <p class="text-slate-500 dark:text-slate-400 mb-8" id="modal-desc">Are you sure you want to proceed?</p>
+            <div class="flex gap-4 justify-end">
+                <button onclick="closeModal()" class="px-4 py-2 border border-slate-200 dark:border-navy-700 rounded-xl hover:bg-slate-50 dark:hover:bg-navy-800 transition-colors text-sm font-medium">Cancel</button>
+                <button onclick="confirmModalAction()" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm transition-colors text-sm font-semibold">Approve</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-success" class="fixed bottom-6 right-6 bg-emerald-500 text-white px-6 py-4 rounded-xl shadow-lg z-50 flex items-center gap-3 transform translate-y-24 transition-transform duration-300">
+        <i data-lucide="check-circle" class="w-5 h-5"></i>
+        <span id="toast-msg">Action completed successfully.</span>
+    </div>
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="w-64 flex flex-col justify-between flex-shrink-0 z-20" style="border-right:1px solid #e8ecf4;">
+        <div class="px-4 pt-6 pb-2 flex-1 overflow-y-auto min-h-0">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 mb-8 px-2">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold tracking-tighter text-sm" style="background: linear-gradient(135deg,#6366f1,#4f46e5);">M</div>
+                <h1 class="font-bold text-lg tracking-tight">MERIDIAN</h1>
+            </div>
+
+            <nav class="space-y-0.5" id="main-nav">
+                <button onclick="nav('overview')" id="nav-overview" class="nav-btn nav-active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4 flex-shrink-0 text-indigo-500"></i>
+                    <span>Overview</span>
+                </button>
+
+                <div class="pt-5 pb-1.5 px-3 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Workforce Intelligence</div>
+                <button onclick="nav('exposure')" id="nav-exposure" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <i data-lucide="cpu" class="w-4 h-4 flex-shrink-0 text-violet-500"></i>
+                        <span>AI Exposure</span>
+                    </div>
+                    <span class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></span>
+                </button>
+                <button onclick="nav('capability')" id="nav-capability" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
+                    <i data-lucide="git-merge" class="w-4 h-4 flex-shrink-0 text-blue-500"></i>
+                    <span>Capability Architecture</span>
+                </button>
+                <button onclick="nav('people')" id="nav-people" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
+                    <i data-lucide="users" class="w-4 h-4 flex-shrink-0 text-sky-500"></i>
+                    <span>People</span>
+                </button>
+
+                <div class="pt-5 pb-1.5 px-3 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Transformation</div>
+                <button onclick="nav('redeployment')" id="nav-redeployment" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
+                    <i data-lucide="repeat" class="w-4 h-4 flex-shrink-0 text-emerald-500"></i>
+                    <span>Redeployment</span>
+                </button>
+                <button onclick="nav('decision')" id="nav-decision" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <i data-lucide="check-square" class="w-4 h-4 flex-shrink-0 text-amber-500"></i>
+                        <span>Decision Center</span>
+                    </div>
+                    <span class="bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 text-[10px] px-2 py-0.5 rounded-full font-bold flex-shrink-0">3</span>
+                </button>
+
+                <div class="pt-5 pb-1.5 px-3 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Context</div>
+                <button onclick="nav('evidence')" id="nav-evidence" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
+                    <i data-lucide="database" class="w-4 h-4 flex-shrink-0 text-teal-500"></i>
+                    <span>Data & Evidence</span>
+                </button>
+                <button onclick="nav('roadmap')" id="nav-roadmap" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
+                    <i data-lucide="map" class="w-4 h-4 flex-shrink-0 text-indigo-400"></i>
+                    <span>90-Day Roadmap</span>
+                </button>
+                <button onclick="nav('economics')" id="nav-economics" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
+                    <i data-lucide="pie-chart" class="w-4 h-4 flex-shrink-0 text-pink-500"></i>
+                    <span>Economics</span>
+                </button>
+                <button onclick="nav('stakeholders')" id="nav-stakeholders" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
+                    <i data-lucide="heart-handshake" class="w-4 h-4 flex-shrink-0 text-rose-500"></i>
+                    <span>Stakeholders</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 sidebar-footer">
+            <button onclick="toggleTheme()" class="w-full py-2 mb-3 rounded-xl text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white flex justify-center items-center gap-2 transition-all hover:bg-white dark:hover:bg-navy-800 border border-transparent hover:border-slate-200 dark:hover:border-navy-700">
+                <i data-lucide="moon" class="w-3.5 h-3.5 text-indigo-400" id="theme-icon"></i> Toggle Theme
+            </button>
+            <div class="flex items-center gap-3 cursor-pointer p-2 rounded-xl hover:bg-white dark:hover:bg-navy-800 transition-all">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">DH</div>
+                <div class="overflow-hidden">
+                    <p class="text-sm font-semibold truncate">Director of Human Capital</p>
+                    <p class="text-xs text-slate-400 truncate">Project Meridian</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 flex flex-col relative">
+        <!-- Topbar -->
+        <header class="h-16 flex items-center justify-between px-8 z-10 sticky top-0">
+            <h2 class="text-lg font-semibold" id="topbar-title" data-i18n="nav_overview">Overview</h2>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-400"></i>
+                    <input type="text" placeholder="Search..." class="pl-9 pr-4 py-1.5 bg-slate-100 dark:bg-navy-800 border-none rounded-full text-sm focus:ring-2 focus:ring-accent-500 outline-none w-64 transition-all dark:text-white placeholder-slate-400">
+                </div>
+                <button class="relative p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors" onclick="openModal('Notifications', 'No new notifications at this time.', '')">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-navy-900"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Scrollable Screens Container -->
+        <div id="main-scroll" class="flex-1 overflow-y-auto p-8 relative">
+            
+            <!-- SCREEN 1: OVERVIEW -->
+            <div id="view-overview" class="view-screen max-w-6xl mx-auto space-y-8 fade-in">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold mb-2 tracking-tight" data-i18n="overview_title">Workforce transformation, made decision-ready.</h1>
+                    <p class="text-slate-500 dark:text-slate-400" data-i18n="overview_subtitle">Project Meridian · Human Capital Transformation</p>
+                </div>
+
+                <!-- Alert -->
+                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 rounded-xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
+                    <div class="flex items-start gap-4">
+                        <div class="p-2 bg-red-100 dark:bg-red-900/40 rounded-lg text-red-600 dark:text-red-400 mt-1 md:mt-0">
+                            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-red-900 dark:text-red-200 text-lg" data-i18n="decision_req">Decision required</h3>
+                            <p class="text-red-700 dark:text-red-300/80 mt-1">Field Metering & Manual Operations is ~70% automatable within 18 months.</p>
+                        </div>
+                    </div>
+                    <button onclick="nav('field-metering')" class="whitespace-nowrap px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-sm transition-colors" data-i18n="explore_redep">Explore redeployment opportunity</button>
+                </div>
+
+                <!-- KPIs -->
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_emp">Employees</p><p class="text-xl font-bold">52,000</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_titles">Job Titles</p><p class="text-xl font-bold">1,800+</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-amber-600 dark:text-amber-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_missing">Missing Skill Data</p><p class="text-xl font-bold text-amber-600 dark:text-amber-500">45%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-red-200 dark:border-red-900/30 shadow-sm"><p class="text-red-600 dark:text-red-400 text-xs font-semibold mb-1 truncate" data-i18n="kpi_exposure">FM Automation</p><p class="text-xl font-bold text-red-600 dark:text-red-400">70%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_disp">Displaced Work</p><p class="text-xl font-bold">4,200</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_val">Engagement Value</p><p class="text-xl font-bold">Rp 3.5B</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-accent-600 text-xs font-semibold mb-1 truncate" data-i18n="kpi_board">Board Milestone</p><p class="text-xl font-bold text-accent-600">90 Days</p></div>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <!-- AI Exposure Bars -->
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-lg" data-i18n="chart_exposure">AI Exposure by Job Family</h3>
+                            <button onclick="nav('exposure')" class="text-sm text-accent-600 font-medium hover:underline">View Map &rarr;</button>
+                        </div>
+                        <div class="space-y-4 flex-1 flex flex-col justify-center">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1"><span class="font-medium">Field Metering & Manual Ops</span><span class="text-red-600 font-bold">70%</span></div>
+                                <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-red-500 h-2 rounded-full" style="width: 70%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1"><span class="font-medium">Routine Administration</span><span class="text-amber-500 font-bold">52%</span></div>
+                                <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-amber-500 h-2 rounded-full" style="width: 52%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1"><span class="font-medium">Customer Operations</span><span class="text-amber-500 font-bold">43%</span></div>
+                                <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-amber-500 h-2 rounded-full" style="width: 43%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1"><span class="font-medium text-slate-600 dark:text-slate-400">Finance Operations</span><span class="text-slate-500">35%</span></div>
+                                <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-slate-400 h-2 rounded-full" style="width: 35%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1"><span class="font-medium text-slate-600 dark:text-slate-400">Engineering Support</span><span class="text-slate-500">28%</span></div>
+                                <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-slate-400 h-2 rounded-full" style="width: 28%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Funnel -->
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col">
+                        <h3 class="font-bold text-lg mb-2" data-i18n="funnel_title">Workforce Transition Funnel</h3>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 italic border-l-2 border-accent-500 pl-3">"4,200 roles of work at risk ≠ 4,200 people to lay off."</p>
+                        
+                        <div class="flex-1 flex flex-col justify-center space-y-2">
+                            <div class="bg-slate-100 dark:bg-navy-800 text-center py-3 rounded-lg text-sm border border-slate-200 dark:border-navy-700 w-full mx-auto font-medium">52,000 Employees Total</div>
+                            <div class="w-4 h-4 mx-auto text-slate-300 dark:text-navy-600"><i data-lucide="arrow-down" class="w-full h-full"></i></div>
+                            <div class="bg-slate-200 dark:bg-navy-700 text-center py-3 rounded-lg text-sm border border-slate-300 dark:border-navy-600 w-11/12 mx-auto font-medium cursor-pointer hover:bg-slate-300 transition-colors" onclick="nav('field-metering')">6,000 Affected Family <i data-lucide="arrow-right" class="w-3 h-3 inline"></i></div>
+                            <div class="w-4 h-4 mx-auto text-slate-300 dark:text-navy-600"><i data-lucide="arrow-down" class="w-full h-full"></i></div>
+                            <div class="bg-red-50 dark:bg-red-900/20 text-center py-3 rounded-lg text-sm border border-red-200 dark:border-red-900/40 text-red-700 dark:text-red-400 w-10/12 mx-auto font-bold">4,200 Displaced Work</div>
+                            <div class="w-4 h-4 mx-auto text-slate-300 dark:text-navy-600"><i data-lucide="arrow-down" class="w-full h-full"></i></div>
+                            <div class="bg-emerald-50 dark:bg-emerald-900/20 text-center py-3 rounded-lg text-sm border border-emerald-200 dark:border-emerald-900/40 text-emerald-700 dark:text-emerald-400 w-9/12 mx-auto font-bold flex items-center justify-center gap-2 cursor-pointer hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors" onclick="nav('redeployment')">3,100 Potential Redeployment <i data-lucide="arrow-right" class="w-4 h-4"></i></div>
+                            <div class="w-4 h-4 mx-auto text-slate-300 dark:text-navy-600"><i data-lucide="arrow-down" class="w-full h-full"></i></div>
+                            <div class="bg-slate-100 dark:bg-navy-800 text-center py-2 rounded-lg text-xs border border-slate-200 dark:border-navy-700 w-7/12 mx-auto text-slate-500 cursor-pointer hover:bg-slate-200 transition-colors" onclick="nav('evidence')">1,100 Require Assessment</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 2: AI EXPOSURE MAP -->
+            <div id="view-exposure" class="view-screen hidden max-w-6xl mx-auto space-y-6 fade-in h-full flex flex-col">
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-2">AI Exposure Map</h1>
+                        <p class="text-slate-500 dark:text-slate-400">Risk versus timeline across job families.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <select class="bg-white dark:bg-navy-900 border border-slate-300 dark:border-navy-700 text-sm rounded-lg px-3 py-2 outline-none cursor-pointer">
+                            <option>All Regions</option><option>Regional Unit 1</option><option>Head Office</option>
+                        </select>
+                        <select class="bg-white dark:bg-navy-900 border border-slate-300 dark:border-navy-700 text-sm rounded-lg px-3 py-2 outline-none cursor-pointer">
+                            <option>All Confidences</option><option>High</option><option>Medium</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 flex-1 min-h-[500px]">
+                    <!-- Matrix Chart -->
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 flex-1 shadow-sm flex flex-col">
+                        <div class="flex justify-between mb-4 text-xs font-semibold text-slate-400 uppercase">
+                            <span>High Exposure (Y)</span>
+                            <span>Horizon (X)</span>
+                        </div>
+                        <div class="relative flex-1 matrix-bg border-l-2 border-b-2 border-slate-300 dark:border-navy-600 mb-6 ml-12">
+                            <div class="absolute -left-14 bottom-[10%] text-xs text-slate-500">Low</div>
+                            <div class="absolute -left-14 bottom-[35%] text-xs text-slate-500">Mod</div>
+                            <div class="absolute -left-14 bottom-[60%] text-xs text-slate-500">High</div>
+                            <div class="absolute -left-14 bottom-[85%] text-xs font-bold text-red-500">Crit</div>
+                            
+                            <div class="absolute -bottom-6 left-[10%] text-xs text-slate-500">0-6m</div>
+                            <div class="absolute -bottom-6 left-[35%] text-xs text-slate-500">6-12m</div>
+                            <div class="absolute -bottom-6 left-[60%] text-xs text-slate-500">12-18m</div>
+                            <div class="absolute -bottom-6 left-[85%] text-xs text-slate-500">24m+</div>
+
+                            <div onclick="nav('field-metering')" class="absolute bottom-[70%] left-[60%] transform -translate-x-1/2 translate-y-1/2 w-24 h-24 bg-red-500/20 border-2 border-red-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-500/40 transition-colors shadow-lg shadow-red-500/20 group">
+                                <span class="text-xs font-bold text-red-700 dark:text-red-200 text-center leading-tight">Field<br>Metering</span>
+                            </div>
+                            
+                            <div class="absolute bottom-[52%] left-[35%] transform -translate-x-1/2 translate-y-1/2 w-16 h-16 bg-amber-500/20 border-2 border-amber-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-amber-500/40 transition-colors" onclick="showEvidence('Routine Administration. 52% Exposure. Focus on automated reporting.')">
+                                <span class="text-[10px] font-bold text-amber-700 dark:text-amber-200 text-center leading-tight">Admin</span>
+                            </div>
+
+                            <div class="absolute bottom-[43%] left-[60%] transform -translate-x-1/2 translate-y-1/2 w-14 h-14 bg-amber-500/20 border-2 border-amber-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-amber-500/40 transition-colors" onclick="showEvidence('Customer Operations. 43% Exposure.')"><span class="text-[9px] font-bold text-amber-700 dark:text-amber-200 text-center leading-tight">Cust Ops</span></div>
+
+                            <div class="absolute bottom-[35%] left-[85%] transform -translate-x-1/2 translate-y-1/2 w-10 h-10 bg-slate-500/20 border-2 border-slate-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-slate-500/40 transition-colors"></div>
+                        </div>
+                    </div>
+
+                    <!-- Featured Card -->
+                    <div class="w-80 flex flex-col gap-4">
+                        <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-5 shadow-sm">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="font-bold text-lg leading-tight">Field Metering & Manual Operations</h3>
+                                <span class="bg-red-100 text-red-700 text-xs px-2 py-1 rounded font-bold">HIGH</span>
+                            </div>
+                            <div class="space-y-3 mb-6">
+                                <div class="flex justify-between text-sm"><span class="text-slate-500">Workforce</span><span class="font-bold">6,000</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-slate-500">Exposure</span><span class="font-bold text-red-600">70%</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-slate-500">Horizon</span><span class="font-bold">18 months</span></div>
+                                <div class="flex justify-between text-sm"><span class="text-slate-500">Displaced Work</span><span class="font-bold">4,200 roles</span></div>
+                            </div>
+                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-100 dark:border-navy-800">
+                                <button onclick="showEvidence('Confidence: Medium.\n\n45% of skill records are blank, so capability confidence is incomplete. Exposure model based on Smart Meter rollout timeline and manual work sample.')" class="text-xs text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-1"><i data-lucide="shield-alert" class="w-3 h-3"></i> Medium confidence</button>
+                                <button onclick="showEvidence('Why 70%?\n\nBased on current rollout plan for Smart Meters across 3 regions, IoT implementation, and automation of manual data capture.')" class="text-xs text-accent-600 hover:underline">Why?</button>
+                            </div>
+                            <button onclick="nav('field-metering')" class="w-full mt-4 py-2 bg-slate-100 dark:bg-navy-800 hover:bg-slate-200 dark:hover:bg-navy-700 rounded-lg text-sm font-semibold transition-colors">View Deep Dive</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 3: FIELD METERING DETAIL -->
+            <div id="view-field-metering" class="view-screen hidden max-w-5xl mx-auto space-y-6 fade-in">
+                <button onclick="nav('exposure')" class="text-sm text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 mb-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Map</button>
+                
+                <div class="flex justify-between items-end">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h1 class="text-3xl font-bold">Field Metering & Manual Operations</h1>
+                            <span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs px-2 py-1 rounded font-bold border border-red-200 dark:border-red-800">HIGH EXPOSURE</span>
+                        </div>
+                        <p class="text-slate-500 dark:text-slate-400">Smart meters, IoT and AI-assisted operations are expected to automate a significant portion of current manual work.</p>
+                    </div>
+                    <button onclick="nav('redeployment')" class="px-4 py-2 bg-accent-600 hover:bg-accent-700 text-white rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center gap-2"><i data-lucide="repeat" class="w-4 h-4"></i> Plan Redeployment</button>
+                </div>
+
+                <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800"><p class="text-slate-500 text-xs mb-1">Employees</p><p class="text-lg font-bold">6,000</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-red-200 dark:border-red-900/30"><p class="text-red-600 dark:text-red-400 text-xs mb-1">Exposure</p><p class="text-lg font-bold text-red-600 dark:text-red-400">70%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800"><p class="text-slate-500 text-xs mb-1">Displaced Work</p><p class="text-lg font-bold">4,200</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800"><p class="text-slate-500 text-xs mb-1">Horizon</p><p class="text-lg font-bold">18 mos</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800"><p class="text-slate-500 text-xs mb-1">Reskillability</p><p class="text-lg font-bold">62%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/30"><p class="text-emerald-600 dark:text-emerald-400 text-xs mb-1">Redeployable</p><p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">3,100</p></div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="border-b border-slate-200 dark:border-navy-800 mt-8">
+                    <nav class="flex gap-6">
+                        <button onclick="switchTab('fm-tabs', 'overview')" id="tab-btn-overview" class="fm-tab-btn pb-3 text-sm font-medium border-b-2 border-accent-600 text-accent-600">Overview</button>
+                        <button onclick="switchTab('fm-tabs', 'breakdown')" id="tab-btn-breakdown" class="fm-tab-btn pb-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">Work Breakdown</button>
+                        <button onclick="switchTab('fm-tabs', 'gaps')" id="tab-btn-gaps" class="fm-tab-btn pb-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">Capability Gaps</button>
+                    </nav>
+                </div>
+
+                <div id="fm-tabs" class="pt-4">
+                    <div id="tab-content-overview" class="fm-tab-content space-y-6">
+                        <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm">
+                            <h3 class="font-bold text-lg mb-4">Process Transformation</h3>
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="space-y-4">
+                                    <div class="text-xs font-bold text-slate-400 uppercase">Before (Current)</div>
+                                    <div class="flex flex-col gap-2">
+                                        <div class="p-3 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded text-sm text-slate-500 line-through">Manual field reading</div>
+                                        <div class="w-4 h-4 mx-auto text-slate-300"><i data-lucide="arrow-down" class="w-full h-full"></i></div>
+                                        <div class="p-3 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded text-sm text-slate-500 line-through">Manual data entry</div>
+                                        <div class="w-4 h-4 mx-auto text-slate-300"><i data-lucide="arrow-down" class="w-full h-full"></i></div>
+                                        <div class="p-3 bg-slate-100 dark:bg-navy-700 border border-slate-300 dark:border-navy-600 rounded text-sm font-medium">Regional validation</div>
+                                    </div>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="text-xs font-bold text-accent-600 uppercase">After (18 mos)</div>
+                                    <div class="flex flex-col gap-2">
+                                        <div class="p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-900/50 rounded text-sm font-medium text-emerald-800 dark:text-emerald-300 flex items-center justify-between"><span class="flex items-center gap-2"><i data-lucide="wifi" class="w-4 h-4"></i> Smart meter signal</span> <span class="text-[10px] bg-emerald-200 dark:bg-emerald-800 px-1 rounded text-emerald-900 dark:text-emerald-100">Automated</span></div>
+                                        <div class="w-4 h-4 mx-auto text-slate-300"><i data-lucide="arrow-down" class="w-full h-full"></i></div>
+                                        <div class="p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-900/50 rounded text-sm font-medium text-emerald-800 dark:text-emerald-300 flex items-center justify-between"><span class="flex items-center gap-2"><i data-lucide="bot" class="w-4 h-4"></i> AI exception detection</span> <span class="text-[10px] bg-emerald-200 dark:bg-emerald-800 px-1 rounded text-emerald-900 dark:text-emerald-100">Automated</span></div>
+                                        <div class="w-4 h-4 mx-auto text-slate-300"><i data-lucide="arrow-down" class="w-full h-full"></i></div>
+                                        <div class="p-3 bg-accent-50 dark:bg-accent-900/20 border border-accent-200 dark:border-accent-900/50 rounded text-sm font-medium text-accent-800 dark:text-accent-300 flex items-center justify-between cursor-pointer hover:bg-accent-100 dark:hover:bg-accent-900/40" onclick="nav('capability')"><span class="flex items-center gap-2"><i data-lucide="user" class="w-4 h-4"></i> Human field intervention</span> <span class="text-[10px] bg-accent-200 dark:bg-accent-800 px-1 rounded text-accent-900 dark:text-accent-100">Reskilled Role</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="tab-content-breakdown" class="fm-tab-content hidden space-y-4">
+                        <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm">
+                            <h3 class="font-bold text-lg mb-4">Activity Automation Potential</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Manual meter reading</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-red-500 h-2 rounded" style="width: 95%"></div></div> <span class="text-xs bg-red-100 text-red-700 w-32 text-center px-2 py-1 rounded font-bold">95% AUTOMATABLE</span></div></div>
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Data capture</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-red-500 h-2 rounded" style="width: 90%"></div></div> <span class="text-xs bg-red-100 text-red-700 w-32 text-center px-2 py-1 rounded font-bold">90% AUTOMATABLE</span></div></div>
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Field inspection</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-amber-500 h-2 rounded" style="width: 40%"></div></div> <span class="text-xs bg-amber-100 text-amber-700 w-32 text-center px-2 py-1 rounded font-bold">40% AUTOMATABLE</span></div></div>
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Reporting</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-amber-500 h-2 rounded" style="width: 60%"></div></div> <span class="text-xs bg-amber-100 text-amber-700 w-32 text-center px-2 py-1 rounded font-bold">60% AUTOMATABLE</span></div></div>
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Exception handling</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-emerald-500 h-2 rounded" style="width: 15%"></div></div> <span class="text-xs bg-emerald-100 text-emerald-700 w-32 text-center px-2 py-1 rounded font-bold">15% AUTOMATABLE</span></div></div>
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Customer escalation</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-emerald-500 h-2 rounded" style="width: 5%"></div></div> <span class="text-xs bg-emerald-100 text-emerald-700 w-32 text-center px-2 py-1 rounded font-bold">5% AUTOMATABLE</span></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="tab-content-gaps" class="fm-tab-content hidden">
+                         <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm flex items-center justify-center min-h-[300px]">
+                            <button onclick="nav('capability')" class="text-accent-600 hover:underline">Review Capability Architecture to see gaps &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 4: CAPABILITY ARCHITECTURE -->
+            <div id="view-capability" class="view-screen hidden max-w-5xl mx-auto space-y-6 fade-in">
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold mb-2">Capability Architecture</h1>
+                    <p class="text-slate-500 dark:text-slate-400">Collapsing 1,800+ legacy titles into a defensible capability structure.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 items-stretch">
+                    <!-- Before -->
+                    <div class="bg-slate-100 dark:bg-navy-900/50 rounded-xl border border-slate-200 dark:border-navy-800 p-6 flex flex-col justify-between relative overflow-hidden">
+                        <div>
+                            <div class="text-xs font-bold text-slate-400 uppercase mb-4">Legacy Position-Based</div>
+                            <div class="space-y-2 opacity-60">
+                                <div class="p-2 bg-white dark:bg-navy-800 rounded border border-slate-200 dark:border-navy-700 text-sm line-through">Senior Technician II</div>
+                                <div class="p-2 bg-white dark:bg-navy-800 rounded border border-slate-200 dark:border-navy-700 text-sm line-through">Engineer Madya</div>
+                                <div class="p-2 bg-white dark:bg-navy-800 rounded border border-slate-200 dark:border-navy-700 text-sm line-through">Field Technician</div>
+                                <div class="p-2 bg-white dark:bg-navy-800 rounded border border-slate-200 dark:border-navy-700 text-sm line-through">Metering Officer</div>
+                                <div class="p-2 bg-white dark:bg-navy-800 rounded border border-slate-200 dark:border-navy-700 text-sm line-through">Technician Specialist</div>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-6 text-slate-500 text-center bg-slate-200 dark:bg-navy-800 py-2 rounded">Unclear mobility, redundant titles.</p>
+                    </div>
+                    
+                    <!-- After -->
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border-2 border-accent-500 p-6 shadow-md relative">
+                        <div class="absolute -left-5 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white dark:bg-navy-950 rounded-full flex items-center justify-center border-2 border-slate-200 dark:border-navy-800 text-slate-400 hidden md:flex"><i data-lucide="arrow-right"></i></div>
+                        <div class="text-xs font-bold text-accent-600 uppercase mb-4">New Capability-Based</div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end border-b border-slate-100 dark:border-navy-800 pb-2">
+                                <span class="text-xs text-slate-500">Job Family</span>
+                                <span class="font-semibold text-sm">Field Operations</span>
+                            </div>
+                            <div class="flex justify-between items-end border-b border-slate-100 dark:border-navy-800 pb-2">
+                                <span class="text-xs text-slate-500">Domain</span>
+                                <span class="font-semibold text-sm">Metering & Asset Ops</span>
+                            </div>
+                            <div class="flex justify-between items-end border-b border-slate-100 dark:border-navy-800 pb-2">
+                                <span class="text-xs text-slate-500">Capability Band</span>
+                                <span class="font-semibold text-sm">Practitioner &rarr; Advanced</span>
+                            </div>
+                            <div>
+                                <span class="text-xs text-slate-500 block mb-2">Skill Portfolio (Click for details)</span>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-accent-50 dark:bg-accent-900/30 text-accent-700 dark:text-accent-300 rounded text-xs font-medium cursor-pointer hover:bg-accent-100 border border-accent-200 dark:border-accent-800" onclick="showEvidence('Capability: Smart Meter Operations\nLevel: Advanced\n\nDefinition: Ability to deploy, calibrate, and troubleshoot connected meter infrastructure.\n\nEvidence Required:\n- Technical Cert Level 2\n- 2+ years field experience\n- Manager Endorsement\n\nConfidence metric: High (when certified).', false)">Smart Meter Ops</span>
+                                    <span class="px-2 py-1 bg-accent-50 dark:bg-accent-900/30 text-accent-700 dark:text-accent-300 rounded text-xs font-medium cursor-pointer hover:bg-accent-100 border border-accent-200 dark:border-accent-800" onclick="showEvidence('Capability: IoT Monitoring\nLevel: Practitioner')">IoT Monitoring</span>
+                                    <span class="px-2 py-1 bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300 rounded text-xs font-medium border border-slate-200 dark:border-navy-700 cursor-pointer" onclick="showEvidence('Capability: Data Interpretation')">Data Interpretation</span>
+                                    <span class="px-2 py-1 bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300 rounded text-xs font-medium border border-slate-200 dark:border-navy-700 cursor-pointer" onclick="showEvidence('Capability: Field Diagnostics')">Field Diagnostics</span>
+                                    <span class="px-2 py-1 bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300 rounded text-xs font-medium border border-slate-200 dark:border-navy-700 cursor-pointer" onclick="showEvidence('Capability: Safety Compliance')">Safety Compliance</span>
+                                    <span class="px-2 py-1 bg-slate-100 dark:bg-navy-800 text-slate-700 dark:text-slate-300 rounded text-xs font-medium border border-slate-200 dark:border-navy-700 cursor-pointer" onclick="showEvidence('Capability: Customer Resolution')">Customer Resolution</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-center">
+                    <button onclick="nav('people')" class="text-sm font-medium text-accent-600 hover:underline flex items-center gap-1">See how this applies to a person <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+
+            <!-- SCREEN 5: PEOPLE PROFILE -->
+            <div id="view-people" class="view-screen hidden max-w-4xl mx-auto space-y-6 fade-in">
+                <div class="flex justify-between items-start">
+                    <div class="flex gap-6 items-center">
+                        <div class="relative">
+                            <div class="w-20 h-20 rounded-full border-4 border-white dark:border-navy-900 shadow-md bg-slate-200 overflow-hidden">
+                                <svg class="w-full h-full text-slate-400 mt-2" fill="currentColor" viewBox="0 0 24 24"><path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                            </div>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold mb-1">Rizky Pratama</h1>
+                            <p class="text-sm text-slate-500">EMP-48213 · Field Metering Technician (Grade 7)</p>
+                            <p class="text-sm text-slate-500">Regional Unit 3</p>
+                        </div>
+                    </div>
+                    <button onclick="nav('redeployment')" class="px-4 py-2 bg-accent-600 hover:bg-accent-700 text-white rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center gap-2"><i data-lucide="compass" class="w-4 h-4"></i> Explore Redeployment</button>
+                </div>
+
+                <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm mt-8">
+                    <h3 class="font-bold text-lg mb-6 border-b border-slate-100 dark:border-navy-800 pb-2">Capability Profile Map</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Skill 1 -->
+                        <div>
+                            <div class="flex items-center justify-between mb-1 text-sm">
+                                <span class="font-medium">Field Operations</span>
+                                <span class="text-slate-500">Level: Advanced</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="flex-1 flex gap-1 h-2">
+                                    <div class="h-full flex-1 bg-accent-500 rounded-l"></div><div class="h-full flex-1 bg-accent-500"></div><div class="h-full flex-1 bg-accent-500"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800 rounded-r"></div>
+                                </div>
+                                <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-semibold w-32 text-center cursor-pointer hover:bg-emerald-200" onclick="showEvidence('Source: Formal Assessment Q3 2023.\nStatus: Verified.')">Verified (Assessed)</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Skill 2 -->
+                        <div>
+                            <div class="flex items-center justify-between mb-1 text-sm">
+                                <span class="font-medium">Safety Compliance</span>
+                                <span class="text-slate-500">Level: Advanced</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="flex-1 flex gap-1 h-2">
+                                    <div class="h-full flex-1 bg-accent-500 rounded-l"></div><div class="h-full flex-1 bg-accent-500"></div><div class="h-full flex-1 bg-accent-500"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800 rounded-r"></div>
+                                </div>
+                                <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-semibold w-32 text-center cursor-pointer hover:bg-emerald-200" onclick="showEvidence('Source: LMS Module Completion.\nStatus: Verified.')">Verified (LMS)</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Skill 3 -->
+                        <div>
+                            <div class="flex items-center justify-between mb-1 text-sm">
+                                <span class="font-medium">Data Interpretation</span>
+                                <span class="text-slate-500">Level: Foundation</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="flex-1 flex gap-1 h-2">
+                                    <div class="h-full flex-1 bg-slate-400 rounded-l"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800 rounded-r"></div>
+                                </div>
+                                <div class="w-32 flex justify-center items-center gap-1">
+                                    <span class="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded font-semibold cursor-pointer hover:bg-amber-200" onclick="showEvidence('Source: Inferred from job title (Grade 7) and average cohort capability.\nWarning: Never formally assessed. Manager validation pending.')">Inferred</span>
+                                    <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-amber-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Skill 4 -->
+                        <div>
+                            <div class="flex items-center justify-between mb-1 text-sm">
+                                <span class="font-medium text-slate-400">IoT Monitoring</span>
+                                <span class="text-slate-400">Level: None</span>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="flex-1 flex gap-1 h-2">
+                                    <div class="h-full flex-1 bg-slate-100 dark:bg-navy-800 rounded-l"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800 rounded-r"></div>
+                                </div>
+                                <span class="text-xs bg-slate-100 dark:bg-navy-700 text-slate-500 px-2 py-0.5 rounded font-semibold w-32 text-center">Missing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 6: REDEPLOYMENT -->
+            <div id="view-redeployment" class="view-screen hidden max-w-6xl mx-auto space-y-6 fade-in">
+                <div class="mb-6 flex justify-between items-end">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-2">Redeployment Opportunities</h1>
+                        <p class="text-slate-500 dark:text-slate-400">Algorithmically matching displaced capabilities to emerging demand.</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-slate-500">Affected Population</p>
+                        <p class="font-bold cursor-pointer hover:text-accent-600" onclick="nav('field-metering')">Field Metering (6,000)</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Card 1 -->
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border-2 border-emerald-500 p-6 shadow-md relative overflow-hidden flex flex-col justify-between">
+                        <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">TOP MATCH</div>
+                        <div>
+                            <h3 class="font-bold text-lg mb-4 text-emerald-900 dark:text-emerald-100">Smart Meter Operations</h3>
+                            <div class="grid grid-cols-2 gap-y-3 text-sm mb-6">
+                                <div class="text-slate-500">Capability Match</div><div class="font-bold text-emerald-600">87%</div>
+                                <div class="text-slate-500">Primary Gap</div><div class="font-medium text-slate-700 dark:text-slate-300">IoT Monitoring</div>
+                                <div class="text-slate-500">Reskill Effort</div><div class="font-medium text-amber-600">Medium (4wks)</div>
+                                <div class="text-slate-500">Confidence</div><div class="font-medium flex items-center gap-1 cursor-pointer hover:text-accent-600" onclick="showEvidence('Confidence is HIGH based on high similarity between legacy metering tasks and new smart meter operations. Gaps are well documented.')"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i> High</div>
+                            </div>
+                        </div>
+                        <button class="w-full py-2 bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 rounded-lg text-sm font-semibold transition-colors flex justify-center items-center gap-2" onclick="selectPathway('smart-meter')">View Detail & Pathway</button>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-lg mb-4">IoT Field Support</h3>
+                            <div class="grid grid-cols-2 gap-y-3 text-sm mb-6">
+                                <div class="text-slate-500">Capability Match</div><div class="font-bold text-accent-600">81%</div>
+                                <div class="text-slate-500">Primary Gap</div><div class="font-medium text-slate-700 dark:text-slate-300">Digital Diagnostics</div>
+                                <div class="text-slate-500">Reskill Effort</div><div class="font-medium text-amber-600">Medium (6wks)</div>
+                                <div class="text-slate-500">Confidence</div><div class="font-medium flex items-center gap-1 cursor-pointer hover:text-accent-600" onclick="showEvidence('Confidence is MEDIUM. Relies on inferred analytical skills from legacy data entry.')"><i data-lucide="shield-alert" class="w-4 h-4 text-amber-500"></i> Medium</div>
+                            </div>
+                        </div>
+                        <button class="w-full py-2 bg-slate-50 dark:bg-navy-800 hover:bg-slate-100 dark:hover:bg-navy-700 border border-slate-200 dark:border-navy-700 rounded-lg text-sm font-semibold transition-colors flex justify-center items-center gap-2" onclick="selectPathway('iot-support')">View Detail & Pathway</button>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-lg mb-4">Asset Monitoring</h3>
+                            <div class="grid grid-cols-2 gap-y-3 text-sm mb-6">
+                                <div class="text-slate-500">Capability Match</div><div class="font-bold text-amber-600">74%</div>
+                                <div class="text-slate-500">Primary Gap</div><div class="font-medium text-slate-700 dark:text-slate-300">Data Interpretation</div>
+                                <div class="text-slate-500">Reskill Effort</div><div class="font-medium text-red-500">High (12wks)</div>
+                                <div class="text-slate-500">Confidence</div><div class="font-medium flex items-center gap-1"><i data-lucide="shield-alert" class="w-4 h-4 text-amber-500"></i> Medium</div>
+                            </div>
+                        </div>
+                        <button class="w-full py-2 bg-slate-50 dark:bg-navy-800 hover:bg-slate-100 dark:hover:bg-navy-700 border border-slate-200 dark:border-navy-700 rounded-lg text-sm font-semibold transition-colors flex justify-center items-center gap-2" onclick="selectPathway('asset-monitoring')">View Detail & Pathway</button>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-lg mb-4">Customer Technical Resolution</h3>
+                            <div class="grid grid-cols-2 gap-y-3 text-sm mb-6">
+                                <div class="text-slate-500">Capability Match</div><div class="font-bold text-amber-600">69%</div>
+                                <div class="text-slate-500">Primary Gap</div><div class="font-medium text-slate-700 dark:text-slate-300">Customer Resolution</div>
+                                <div class="text-slate-500">Reskill Effort</div><div class="font-medium text-amber-600">Medium (4wks)</div>
+                                <div class="text-slate-500">Confidence</div><div class="font-medium flex items-center gap-1"><i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i> High</div>
+                            </div>
+                        </div>
+                        <button class="w-full py-2 bg-slate-50 dark:bg-navy-800 hover:bg-slate-100 dark:hover:bg-navy-700 border border-slate-200 dark:border-navy-700 rounded-lg text-sm font-semibold transition-colors flex justify-center items-center gap-2" onclick="selectPathway('customer-resolution')">View Detail & Pathway</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 7: REDEPLOYMENT PLAN -->
+            <div id="view-plan" class="view-screen hidden max-w-5xl mx-auto space-y-6 fade-in">
+                <button onclick="nav('redeployment')" class="text-sm text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 mb-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Options</button>
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h1 class="text-3xl font-bold mb-2" id="plan-header-title">Transition Plan: Cohort A</h1>
+                        <p class="text-slate-500 dark:text-slate-400" id="plan-header-sub">Destination: Smart Meter Operations</p>
+                    </div>
+                    <button id="btn-approve-cohort" onclick="openModal('Approve Cohort A', 'Add 1,250 employees to the formal transition plan? This will notify Regional HR.', 'Success: 1,250 employees added to transition plan.')" class="px-6 py-2 bg-accent-600 hover:bg-accent-700 text-white rounded-lg font-medium shadow-sm transition-colors">Approve Cohort</button>
+                </div>
+
+                <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm mt-6">
+                    <div class="flex justify-between items-center mb-8 border-b border-slate-100 dark:border-navy-800 pb-6">
+                        <div><p class="text-sm text-slate-500">Cohort Size</p><p class="text-2xl font-bold" id="plan-stat-size">1,250 Employees</p></div>
+                        <div><p class="text-sm text-slate-500">Req Capabilities</p><p class="text-sm font-bold text-slate-700 dark:text-slate-300" id="plan-stat-caps">IoT Monitor, Smart Meter, Diagnostics</p></div>
+                        <div><p class="text-sm text-slate-500">Avg Readiness</p><p class="text-2xl font-bold text-emerald-600" id="plan-stat-readiness">87%</p></div>
+                    </div>
+
+                    <div id="plan-timeline-container" class="relative px-4">
+                        <div class="absolute left-6 top-2 bottom-2 w-0.5 bg-slate-200 dark:bg-navy-700"></div>
+                        
+                        <div class="relative pl-12 mb-10">
+                            <div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-accent-500 border-4 border-white dark:border-navy-900 shadow"></div>
+                            <h4 class="font-bold text-lg mb-1">Days 0–30: Assessment & Validation</h4>
+                            <p class="text-sm text-slate-500 mb-3">Confirm IoT baseline skills using simulated environment and manager validation.</p>
+                            <div class="flex items-center gap-4">
+                                <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-accent-500 h-2 rounded-full" style="width: 100%"></div></div>
+                                <span class="text-xs font-bold text-slate-400">100%</span>
+                            </div>
+                        </div>
+
+                        <div class="relative pl-12 mb-10">
+                            <div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-slate-300 dark:bg-navy-600 border-4 border-white dark:border-navy-900"></div>
+                            <h4 class="font-bold text-lg mb-1">Days 31–60: Learning + Simulation</h4>
+                            <p class="text-sm text-slate-500 mb-3">Intensive upskilling on Digital Diagnostics. Virtual reality modules.</p>
+                            <div class="flex items-center gap-4">
+                                <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-accent-500 h-2 rounded-full" style="width: 20%"></div></div>
+                                <span class="text-xs font-bold text-slate-400">20%</span>
+                            </div>
+                        </div>
+
+                        <div class="relative pl-12">
+                            <div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-slate-200 dark:bg-navy-700 border-4 border-white dark:border-navy-900"></div>
+                            <h4 class="font-bold text-lg mb-1 text-slate-400">Days 61–90: Pilot Deployment</h4>
+                            <p class="text-sm text-slate-500">Shadowing in Regional Unit 1 & 2. Supervised field runs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 8 & 9: DATA QUALITY & EVIDENCE -->
+            <div id="view-evidence" class="view-screen hidden max-w-5xl mx-auto space-y-6 fade-in">
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold mb-2">Data Quality & Evidence</h1>
+                    <p class="text-slate-500 dark:text-slate-400">Transparency on system inputs driving AI inferences.</p>
+                </div>
+
+                <div class="grid grid-cols-4 gap-4 mb-8">
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/30"><p class="text-slate-500 text-xs mb-1">Identity Matching</p><p class="text-xl font-bold text-emerald-600">92%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-red-200 dark:border-red-900/30"><p class="text-slate-500 text-xs mb-1">Skill Completeness</p><p class="text-xl font-bold text-red-600">55%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-amber-200 dark:border-amber-900/30"><p class="text-slate-500 text-xs mb-1">Taxonomy Consistency</p><p class="text-xl font-bold text-amber-600">61%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-amber-200 dark:border-amber-900/30"><p class="text-slate-500 text-xs mb-1">Perf Reliability</p><p class="text-xl font-bold text-amber-600">48%</p></div>
+                </div>
+                
+                <h3 class="font-bold text-lg mb-2 mt-8">Source Systems Connectivity</h3>
+                <div class="grid md:grid-cols-2 gap-4 mb-8">
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded border border-slate-200 dark:border-navy-800 flex justify-between items-center"><span class="font-medium">SAP SuccessFactors</span> <span class="text-xs bg-amber-100 text-amber-700 px-2 rounded">Partial Historical</span></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded border border-slate-200 dark:border-navy-800 flex justify-between items-center"><span class="font-medium">Legacy Competency System</span> <span class="text-xs bg-red-100 text-red-700 px-2 rounded">Low Quality</span></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded border border-slate-200 dark:border-navy-800 flex justify-between items-center"><span class="font-medium">Moodle LMS</span> <span class="text-xs bg-red-100 text-red-700 px-2 rounded">Low Taxonomy</span></div>
+                    <div class="bg-white dark:bg-navy-900 p-4 rounded border border-slate-200 dark:border-navy-800 flex justify-between items-center"><span class="font-medium">Oracle Payroll</span> <span class="text-xs bg-slate-200 text-slate-700 px-2 rounded flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> Restricted</span></div>
+                </div>
+
+                <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 overflow-hidden shadow-sm">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 dark:bg-navy-800/50 text-slate-500 border-b border-slate-200 dark:border-navy-800">
+                            <tr><th class="p-4 font-medium">Signal</th><th class="p-4 font-medium">Source</th><th class="p-4 font-medium">Status</th><th class="p-4 font-medium">Confidence</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-navy-800">
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('Employee ID match across systems is solid.')"><td class="p-4 font-medium">Employee Identity</td><td class="p-4 text-slate-500">SAP SuccessFactors</td><td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs">Measured</span></td><td class="p-4 font-semibold">High</td></tr>
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('Skill records are missing for 45% of the workforce. Action required: Baseline assessment.')"><td class="p-4 font-medium">Skill Record</td><td class="p-4 text-slate-500">Moodle LMS</td><td class="p-4"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs">Missing (45%)</span></td><td class="p-4 font-semibold text-red-500">Low</td></tr>
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('AI mapped legacy titles to capability taxonomy. Manual validation needed.')"><td class="p-4 font-medium">Capability Level</td><td class="p-4 text-slate-500">AI Role Mapping</td><td class="p-4"><span class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-xs">Inferred</span></td><td class="p-4 font-semibold text-amber-500">Medium</td></tr>
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('Compensation data unavailable under Ministry data-governance policy.')"><td class="p-4 font-medium">Compensation</td><td class="p-4 text-slate-500">Oracle Payroll</td><td class="p-4"><span class="bg-slate-200 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs flex items-center gap-1 w-max"><i data-lucide="lock" class="w-3 h-3"></i> Unavailable</span></td><td class="p-4 font-semibold text-slate-400">N/A</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SCREEN 10: ROADMAP -->
+            <div id="view-roadmap" class="view-screen hidden max-w-4xl mx-auto space-y-6 fade-in">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold mb-2">90-Day Roadmap</h1>
+                    <p class="text-slate-500 dark:text-slate-400">Path to Board-ready workforce transition plan.</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-emerald-200 dark:border-emerald-900/40 p-5 flex gap-6 cursor-pointer hover:shadow-md transition">
+                        <div class="font-bold text-xl text-emerald-600 dark:text-emerald-400 w-20 flex-shrink-0">Day 0</div>
+                        <div>
+                            <h3 class="font-bold mb-1">Baseline workforce intelligence</h3>
+                            <p class="text-sm text-slate-500 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Completed</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-accent-200 dark:border-accent-900/40 p-5 flex gap-6 shadow-md cursor-pointer hover:shadow-lg transition ring-2 ring-accent-500/20" onclick="nav('overview')">
+                        <div class="font-bold text-xl text-accent-600 w-20 flex-shrink-0">Day 30</div>
+                        <div>
+                            <h3 class="font-bold mb-1 flex items-center gap-2">AI Exposure Map & Risk ID <span class="bg-accent-100 dark:bg-accent-900/30 text-accent-700 dark:text-accent-400 text-xs px-2 py-0.5 rounded font-bold">CURRENT</span></h3>
+                            <p class="text-sm text-slate-500 mb-2">Identify Field Metering risk and initiate Union engagement.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-5 flex gap-6 opacity-60 cursor-pointer hover:opacity-100 transition" onclick="nav('capability')">
+                        <div class="font-bold text-xl text-slate-400 w-20 flex-shrink-0">Day 60</div>
+                        <div>
+                            <h3 class="font-bold mb-1">Capability Architecture Pilots</h3>
+                            <p class="text-sm text-slate-500">Draft redeployment cohorts based on inferred profiles.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-5 flex gap-6 opacity-60 cursor-pointer hover:opacity-100 transition" onclick="nav('decision')">
+                        <div class="font-bold text-xl text-slate-400 w-20 flex-shrink-0">Day 90</div>
+                        <div>
+                            <h3 class="font-bold mb-1">Board-ready workforce transition plan</h3>
+                            <p class="text-sm text-slate-500">Proof points, Economics, Decision gates.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 11: ECONOMICS -->
+            <div id="view-economics" class="view-screen hidden max-w-5xl mx-auto space-y-6 fade-in">
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold mb-2">Economics & Value</h1>
+                    <p class="text-slate-500 dark:text-slate-400">Illustrative scenarios. <span class="font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded">Note: Payroll data is restricted.</span></p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm">
+                        <h3 class="font-bold text-lg mb-6 border-b border-slate-100 dark:border-navy-800 pb-2">Scenario A: Transform</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Engagement Investment</span> <span class="font-bold">Rp 3.5B</span></div>
+                            <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Reskilling Cost (Est)</span> <span class="font-bold">Scenario Based</span></div>
+                            <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Retained Knowledge Value</span> <span class="font-bold text-emerald-600">High</span></div>
+                            <div class="mt-6 pt-4 border-t border-slate-100 dark:border-navy-800 text-sm font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 p-3 rounded">Result: 3,100 roles redeployed proactively. Positive Union sentiment.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-slate-50 dark:bg-navy-900/50 rounded-xl border border-slate-200 dark:border-navy-800 p-6 opacity-80">
+                        <h3 class="font-bold text-lg mb-6 border-b border-slate-200 dark:border-navy-700 pb-2">Scenario B: Wait (Cost of Inaction)</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Engagement Investment</span> <span class="font-bold">Rp 0</span></div>
+                            <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Disruption Cost</span> <span class="font-bold text-red-500">Severe</span></div>
+                            <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Union Resistance Risk</span> <span class="font-bold text-red-500">Critical</span></div>
+                            <div class="mt-6 pt-4 border-t border-slate-200 dark:border-navy-700 text-sm font-medium text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-3 rounded">Result: Reactive layoffs, high transition cost, reputational damage.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 12: STAKEHOLDERS -->
+            <div id="view-stakeholders" class="view-screen hidden max-w-5xl mx-auto space-y-6 fade-in">
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold mb-2">Change & Stakeholders</h1>
+                    <p class="text-slate-500 dark:text-slate-400">Managing perception and alignment.</p>
+                </div>
+                
+                <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 overflow-hidden shadow-sm">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 dark:bg-navy-800/50 text-slate-500 border-b border-slate-200 dark:border-navy-800">
+                            <tr><th class="p-4 font-medium">Stakeholder</th><th class="p-4 font-medium">Primary Concern</th><th class="p-4 font-medium">Engagement Action</th></tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-navy-800">
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50 transition-colors" onclick="showEvidence('Union Message:\n\nFrame the transformation around redeployment, capability development and evidence-based workforce transition — not individual termination.')">
+                                <td class="p-4 font-bold text-accent-700 dark:text-accent-400">Workers' Union</td>
+                                <td class="p-4 text-slate-600 dark:text-slate-400 italic">"Consultants are mapping who gets cut."</td>
+                                <td class="p-4"><span class="bg-accent-100 text-accent-700 px-2 py-1 rounded text-xs font-semibold">Frame around Redeployment</span></td>
+                            </tr>
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50 transition-colors" onclick="nav('economics')">
+                                <td class="p-4 font-bold">Board of Directors</td>
+                                <td class="p-4 text-slate-600 dark:text-slate-400">Cost of transformation vs ROI.</td>
+                                <td class="p-4"><span class="bg-slate-100 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs">Present Scenario Economics</span></td>
+                            </tr>
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50 transition-colors">
+                                <td class="p-4 font-bold">Regional HR</td>
+                                <td class="p-4 text-slate-600 dark:text-slate-400">Accuracy of central data.</td>
+                                <td class="p-4"><span class="bg-slate-100 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs">Co-create Capability Pilots</span></td>
+                            </tr>
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50 transition-colors">
+                                <td class="p-4 font-bold">Ministry</td>
+                                <td class="p-4 text-slate-600 dark:text-slate-400">Social impact and disruption.</td>
+                                <td class="p-4"><span class="bg-slate-100 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs">Demonstrate Funnel</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h3 class="font-bold text-lg mb-2 mt-8">Engagement Timeline</h3>
+                <div class="flex justify-between relative mt-4 pt-4 border-t border-slate-200 dark:border-navy-800">
+                    <div class="text-center w-1/4"><div class="font-bold text-accent-600 mb-1">Day 30</div><div class="text-xs text-slate-500">Initial Briefing</div></div>
+                    <div class="text-center w-1/4"><div class="font-bold mb-1">Day 45</div><div class="text-xs text-slate-500">Working Groups</div></div>
+                    <div class="text-center w-1/4"><div class="font-bold mb-1">Day 60</div><div class="text-xs text-slate-500">Pilot Alignment</div></div>
+                    <div class="text-center w-1/4"><div class="font-bold mb-1">Day 90</div><div class="text-xs text-slate-500">Formal Approval</div></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 13: DECISION CENTER -->
+            <div id="view-decision" class="view-screen hidden max-w-4xl mx-auto space-y-6 fade-in">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold mb-2">Decision Center</h1>
+                    <p class="text-slate-500 dark:text-slate-400">Pending executive approvals required to unblock milestones.</p>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Dec 1 -->
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border-l-4 border-l-emerald-500 border-t border-r border-b border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col md:flex-row gap-6 justify-between items-start md:items-center hover:shadow-md transition">
+                        <div>
+                            <h3 class="font-bold text-lg mb-1 cursor-pointer hover:text-accent-600" onclick="nav('plan')">1. Approve Field Metering redeployment pilot</h3>
+                            <p class="text-sm text-slate-500 mb-3">Initiate 1,250 employee cohort transition to Smart Meter Ops.</p>
+                            <div class="flex gap-2">
+                                <span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded font-bold">REC: APPROVE</span>
+                                <span class="bg-amber-100 text-amber-700 text-xs px-2 py-1 rounded font-medium flex items-center gap-1 cursor-pointer" onclick="showEvidence('Medium confidence due to 45% missing skill data. Risk mitigated by 30-day assessment phase.')"><i data-lucide="shield-alert" class="w-3 h-3"></i> Medium Confidence</span>
+                            </div>
+                        </div>
+                        <button onclick="openModal('Approve Pilot', 'Initiate Field Metering pilot?', 'Success: Pilot approved and HR notified.')" class="whitespace-nowrap px-6 py-2 bg-accent-600 hover:bg-accent-700 text-white rounded-lg font-medium shadow-sm transition-colors">Approve Decision</button>
+                    </div>
+
+                    <!-- Dec 2 -->
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border-l-4 border-l-accent-500 border-t border-r border-b border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col md:flex-row gap-6 justify-between items-start md:items-center hover:shadow-md transition">
+                        <div>
+                            <h3 class="font-bold text-lg mb-1 cursor-pointer hover:text-accent-600" onclick="nav('capability')">2. Adopt capability architecture (Wave 1)</h3>
+                            <p class="text-sm text-slate-500 mb-3">Collapse 400 titles into 12 capabilities for Field Ops.</p>
+                            <div class="flex gap-2">
+                                <span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded font-bold">REC: APPROVE W/ VALIDATION</span>
+                            </div>
+                        </div>
+                        <button onclick="openModal('Approve Architecture', 'Adopt Wave 1 architecture? This will map employees to new structures.', 'Success: Architecture adopted.')" class="whitespace-nowrap px-6 py-2 bg-accent-600 hover:bg-accent-700 text-white rounded-lg font-medium shadow-sm transition-colors">Approve Decision</button>
+                    </div>
+                    
+                    <!-- Dec 3 -->
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border-l-4 border-l-amber-500 border-t border-r border-b border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col md:flex-row gap-6 justify-between items-start md:items-center hover:shadow-md transition">
+                        <div>
+                            <h3 class="font-bold text-lg mb-1 cursor-pointer hover:text-accent-600" onclick="nav('economics')">3. Proceed without Payroll compensation data</h3>
+                            <p class="text-sm text-slate-500 mb-3">Ministry restriction prevents data access. Use scenario models instead.</p>
+                            <div class="flex gap-2">
+                                <span class="bg-amber-100 text-amber-700 text-xs px-2 py-1 rounded font-bold uppercase">Rec: Proceed with Scenarios</span>
+                            </div>
+                        </div>
+                        <button onclick="openModal('Acknowledge Data Gap', 'Proceed using scenario economics instead of direct payroll data?', 'Success: Scenarios unlocked for Board presentation.')" class="whitespace-nowrap px-6 py-2 bg-accent-600 hover:bg-accent-700 text-white rounded-lg font-medium shadow-sm transition-colors">Approve Decision</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Spacer -->
+            <div class="h-24"></div>
+        </div>
+    </main>
+
+    <script>
+        // State
+        const state = { view: 'overview', lang: 'en', theme: 'light' };
+        let actionCallbackMsg = "";
+
+        // Navigation
+        function nav(viewId) {
+            document.querySelectorAll('.view-screen').forEach(el => el.classList.add('hidden'));
+            document.getElementById('view-' + viewId).classList.remove('hidden');
+            
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('nav-active');
+                el.classList.add('text-slate-600', 'dark:text-slate-400');
+            });
+            
+            const active = document.getElementById('nav-' + viewId);
+            if(active) {
+                active.classList.add('nav-active');
+                active.classList.remove('text-slate-600', 'dark:text-slate-400');
+                document.getElementById('topbar-title').innerText = active.querySelector('span')?.innerText.trim() || active.innerText.trim();
+            }
+            
+            document.getElementById('main-scroll').scrollTop = 0;
+            state.view = viewId;
+            closeAllDrawers();
+        }
+
+        // Tabs
+        function switchTab(containerId, tabId) {
+            const container = document.getElementById(containerId);
+            container.querySelectorAll('.fm-tab-content').forEach(el => el.classList.add('hidden'));
+            container.querySelectorAll('.fm-tab-btn').forEach(el => {
+                el.classList.remove('border-accent-600', 'text-accent-600');
+                el.classList.add('border-transparent', 'text-slate-500');
+            });
+            document.getElementById('tab-content-' + tabId).classList.remove('hidden');
+            const btn = document.getElementById('tab-btn-' + tabId);
+            btn.classList.remove('border-transparent', 'text-slate-500');
+            btn.classList.add('border-accent-600', 'text-accent-600');
+        }
+
+        // Pathway Data Model
+        const pathwayData = {
+            'smart-meter': {
+                title: 'Smart Meter Operations',
+                cohort: 'Cohort A',
+                size: '1,250 Employees',
+                caps: 'IoT Monitor, Smart Meter, Diagnostics',
+                readiness: '87%',
+                evidence: `Recommendation: Smart Meter Operations
+Match Score: 87% (AI-assisted scenario match)
+
+Match Score Breakdown:
+- Core operational capability: 30 / 30
+- Field maintenance: 25 / 25
+- Data handling: 15 / 15
+- Technology readiness: 8 / 15
+- IoT Monitoring: 9 / 15
+Total: 87 / 100 (Illustrative scoring model)
+
+Evidence Supporting Score:
+- VERIFIED: Field operations
+- VERIFIED: Maintenance
+- INFERRED: Data interpretation
+- MISSING: IoT monitoring
+
+Confidence: High (based on direct task translation)
+Estimated Capacity: 1,250 roles`,
+                phases: [
+                    { title: "Days 0–30: Assessment & Validation", desc: "Confirm IoT baseline skills using simulated environment and manager validation.", progress: "100%" },
+                    { title: "Days 31–60: Learning + Simulation", desc: "Intensive upskilling on Digital Diagnostics. Virtual reality modules.", progress: "20%" },
+                    { title: "Days 61–90: Pilot Deployment", desc: "Shadowing in Regional Unit 1 & 2. Supervised field runs.", progress: "0%" }
+                ]
+            },
+            'iot-support': {
+                title: 'IoT Field Support',
+                cohort: 'Cohort B',
+                size: '900 Employees',
+                caps: 'Digital Diagnostics, Sensor Calibration, Network Basics',
+                readiness: '81%',
+                evidence: `Recommendation: IoT Field Support
+Match Score: 81% (AI-assisted scenario match)
+
+Match Score Breakdown:
+- Core operational capability: 28 / 30
+- Field maintenance: 22 / 25
+- Data handling: 14 / 15
+- Technology readiness: 7 / 15
+- Digital Diagnostics: 10 / 15
+Total: 81 / 100 (Illustrative scoring model)
+
+Evidence Supporting Score:
+- VERIFIED: Hardware installation
+- INFERRED: Signal analysis
+- MISSING: Digital Diagnostics
+
+Confidence: Medium (relies on inferred analytical skills)
+Estimated Capacity: 900 roles`,
+                phases: [
+                    { title: "Days 0–30: Diagnostic Foundation", desc: "Baseline evaluation of digital tool proficiency and signal testing.", progress: "100%" },
+                    { title: "Days 31–60: Field Hardware & Sensors", desc: "Hands-on sensor replacement and field telemetry troubleshooting.", progress: "10%" },
+                    { title: "Days 61–90: Regional Support Onboarding", desc: "Deployment with Tier-2 field support teams.", progress: "0%" }
+                ]
+            },
+            'asset-monitoring': {
+                title: 'Asset Monitoring',
+                cohort: 'Cohort C',
+                size: '650 Employees',
+                caps: 'Data Interpretation, Anomaly Detection, Asset Health',
+                readiness: '74%',
+                evidence: `Recommendation: Asset Monitoring
+Match Score: 74% (AI-assisted scenario match)
+
+Match Score Breakdown:
+- Core operational capability: 25 / 30
+- Field maintenance: 20 / 25
+- Data handling: 10 / 15
+- Technology readiness: 9 / 15
+- Data Interpretation: 10 / 15
+Total: 74 / 100 (Illustrative scoring model)
+
+Evidence Supporting Score:
+- VERIFIED: Field inspection routines
+- INFERRED: Basic computer literacy
+- MISSING: Advanced Data Interpretation
+
+Confidence: Medium (requires extended upskilling program)
+Estimated Capacity: 650 roles`,
+                phases: [
+                    { title: "Days 0–30: Data Analytics Bootcamp", desc: "Fundamentals of telemetry dashboards and data interpretation.", progress: "100%" },
+                    { title: "Days 31–60: Asset Predictive Maintenance", desc: "Supervised data monitoring and anomaly detection training.", progress: "0%" },
+                    { title: "Days 61–90: Control Room Rotation", desc: "Live monitoring under senior analyst supervision.", progress: "0%" }
+                ]
+            },
+            'customer-resolution': {
+                title: 'Customer Technical Resolution',
+                cohort: 'Cohort D',
+                size: '700 Employees',
+                caps: 'Customer Escalation, Billing Systems, Problem Solving',
+                readiness: '69%',
+                evidence: `Recommendation: Customer Technical Resolution
+Match Score: 69% (AI-assisted scenario match)
+
+Match Score Breakdown:
+- Core operational capability: 24 / 30
+- Field maintenance: 15 / 25
+- Data handling: 15 / 15
+- Technology readiness: 8 / 15
+- Customer Resolution: 7 / 15
+Total: 69 / 100 (Illustrative scoring model)
+
+Evidence Supporting Score:
+- VERIFIED: On-site customer interaction history
+- VERIFIED: Metering accuracy verification
+- MISSING: Conflict resolution & CRM software training
+
+Confidence: High (Strong soft skills foundation from field experience)
+Estimated Capacity: 700 roles`,
+                phases: [
+                    { title: "Days 0–30: Customer Experience & CRM", desc: "CRM platform training and conflict de-escalation workshops.", progress: "100%" },
+                    { title: "Days 31–60: Technical Billing & Diagnostics", desc: "Deep dive into customer-facing smart meter billing queries.", progress: "15%" },
+                    { title: "Days 61–90: Omnichannel Support Trial", desc: "Supervised phone and chat support integration.", progress: "0%" }
+                ]
+            }
+        };
+
+        let currentPathwayKey = 'smart-meter';
+
+        function selectPathway(key) {
+            currentPathwayKey = key;
+            const p = pathwayData[key] || pathwayData['smart-meter'];
+            showEvidence(p.evidence, true);
+        }
+
+        function loadTransitionPlan(key) {
+            const p = pathwayData[key || currentPathwayKey] || pathwayData['smart-meter'];
+            
+            document.getElementById('plan-header-title').innerText = 'Transition Plan: ' + p.cohort;
+            document.getElementById('plan-header-sub').innerText = 'Destination: ' + p.title;
+            document.getElementById('plan-stat-size').innerText = p.size;
+            document.getElementById('plan-stat-caps').innerText = p.caps;
+            document.getElementById('plan-stat-readiness').innerText = p.readiness;
+            
+            const btn = document.getElementById('btn-approve-cohort');
+            btn.onclick = function() {
+                openModal(
+                    'Approve ' + p.cohort + ' (' + p.title + ')',
+                    'Add ' + p.size + ' to the formal transition plan for ' + p.title + '? This will notify Regional HR.',
+                    'Success: ' + p.size + ' added to ' + p.title + ' transition plan.'
+                );
+            };
+
+            let timelineHtml = '<div class="absolute left-6 top-2 bottom-2 w-0.5 bg-slate-200 dark:bg-navy-700"></div>';
+            p.phases.forEach((ph, idx) => {
+                const isLast = idx === p.phases.length - 1;
+                const dotBg = idx === 0 ? 'bg-indigo-500 shadow' : (ph.progress !== '0%' ? 'bg-slate-300 dark:bg-navy-600' : 'bg-slate-200 dark:bg-navy-700');
+                const textCol = idx === 0 ? '' : (ph.progress === '0%' ? 'text-slate-400' : '');
+                
+                timelineHtml += `
+                    <div class="relative pl-12 ${isLast ? '' : 'mb-10'}">
+                        <div class="absolute left-0 top-1 w-5 h-5 rounded-full ${dotBg} border-4 border-white dark:border-navy-900"></div>
+                        <h4 class="font-bold text-lg mb-1 ${textCol}">${ph.title}</h4>
+                        <p class="text-sm text-slate-500 mb-3">${ph.desc}</p>
+                        ${ph.progress !== '0%' ? `
+                        <div class="flex items-center gap-4">
+                            <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-indigo-500 h-2 rounded-full" style="width: ${ph.progress}"></div></div>
+                            <span class="text-xs font-bold text-slate-400">${ph.progress}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            document.getElementById('plan-timeline-container').innerHTML = timelineHtml;
+        }
+
+        // Modals / Drawers
+        function showEvidence(text, showBtn = false) {
+            const content = document.getElementById('drawer-evidence-content');
+            let html = `<div class="bg-slate-50 dark:bg-navy-800 p-4 rounded-lg border border-slate-200 dark:border-navy-700 text-sm whitespace-pre-wrap leading-relaxed">${text}</div>`;
+            if(showBtn) html += `<button onclick="loadTransitionPlan(currentPathwayKey); nav('plan'); closeAllDrawers()" class="w-full mt-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold shadow-sm transition-colors text-sm">Add to Transition Plan</button>`;
+            
+            content.innerHTML = html;
+            document.getElementById('global-overlay').classList.remove('hidden');
+            document.getElementById('drawer-evidence').classList.remove('translate-x-full');
+        }
+
+        function closeAllDrawers() {
+            document.getElementById('global-overlay').classList.add('hidden');
+            document.getElementById('drawer-evidence').classList.add('translate-x-full');
+            closeModal();
+        }
+
+        function openModal(title, desc, successMsg) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            actionCallbackMsg = successMsg || "Action confirmed.";
+            document.getElementById('modal-action').classList.remove('hidden');
+        }
+        function closeModal() {
+            document.getElementById('modal-action').classList.add('hidden');
+        }
+        function confirmModalAction() {
+            closeModal();
+            showToast(actionCallbackMsg);
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast-success');
+            document.getElementById('toast-msg').innerText = msg;
+            t.classList.remove('translate-y-24');
+            setTimeout(() => t.classList.add('translate-y-24'), 3000);
+        }
+
+        // Theme
+        function toggleTheme() {
+            const html = document.documentElement;
+            if(html.classList.contains('light')) {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                document.getElementById('theme-icon').setAttribute('data-lucide', 'sun');
+            } else {
+                html.classList.remove('dark');
+                html.classList.add('light');
+                document.getElementById('theme-icon').setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        // Init
+        lucide.createIcons();
+    </script>
+</body>
+</html>
