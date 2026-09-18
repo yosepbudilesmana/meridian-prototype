@@ -48,7 +48,7 @@ This prototype was intentionally built using a lightweight, Single-File architec
 
 ## 🌐 How to Run (Live Demo)
 No installation is required to explore this application.
-* **Live Prototype:** [INSERT YOUR GITHUB PAGES URL HERE]
+* **Live Prototype:** https://yosepbudilesmana.github.io/meridian-prototype/
 * **Local Run:** Clone this repository, then open the `index.html` file using any modern web browser (Chrome, Safari, Edge).
 
 ---
