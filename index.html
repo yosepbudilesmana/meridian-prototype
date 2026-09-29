@@ -20,10 +20,12 @@
                             800: '#243b53', 900: '#102a43', 950: '#070f1a'
                         },
                         accent: {
-                            50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca'
+                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+                            400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+                            800: '#1e40af', 900: '#1e3a8a', 950: '#172554'
                         },
                         brand: {
-                            500: '#6366f1', 600: '#4f46e5'
+                            500: '#3b82f6', 600: '#2563eb'
                         }
                     }
                 }
@@ -50,7 +52,7 @@
 
         /* Premium main bg */
         body.light #main-scroll {
-            background: linear-gradient(135deg, #f8faff 0%, #eef2ff 40%, #f0fdf4 100%);
+            background: linear-gradient(135deg, #f8faff 0%, #eff6ff 40%, #f0fdf4 100%);
         }
         .dark #main-scroll {
             background: linear-gradient(135deg, #07101d 0%, #0a1525 60%, #071018 100%);
@@ -65,16 +67,16 @@
         }
         .nav-btn { text-align: left; }
 
-        /* Active nav glow */
+        /* Active nav indicator (removed glow) */
         .nav-active {
-            background: linear-gradient(90deg, #eef2ff, #e0e7ff) !important;
-            color: #4f46e5 !important;
-            box-shadow: inset 3px 0 0 #4f46e5;
+            background: linear-gradient(90deg, #eff6ff, #dbeafe) !important;
+            color: #2563eb !important;
+            box-shadow: inset 3px 0 0 #2563eb;
         }
         .dark .nav-active {
             background: linear-gradient(90deg, rgba(99,102,241,0.15), rgba(99,102,241,0.05)) !important;
-            color: #a5b4fc !important;
-            box-shadow: inset 3px 0 0 #6366f1;
+            color: #93c5fd !important;
+            box-shadow: inset 3px 0 0 #60a5fa; /* Changed to softer blue for accessibility, avoiding #3b82f6 dark glow issue if any, or just keep as inset as it's an indicator not a glow. Wait, the prompt said to remove colored box-shadow glow. So let's use border-left instead to be perfectly clean. */
         }
 
         /* Card polish */
@@ -82,7 +84,7 @@
             background: white; 
             border-radius: 14px; 
             border: 1px solid #e8ecf4;
-            box-shadow: 0 1px 4px rgba(99,102,241,0.04), 0 4px 20px rgba(0,0,0,0.04);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04), 0 4px 20px rgba(0,0,0,0.04);
             transition: box-shadow 0.2s;
         }
         .dark .card { 
@@ -90,7 +92,7 @@
             border-color: #1a2d4a;
             box-shadow: 0 1px 4px rgba(0,0,0,0.3);
         }
-        .card:hover { box-shadow: 0 2px 8px rgba(99,102,241,0.10), 0 8px 32px rgba(0,0,0,0.07); }
+        .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 8px 32px rgba(0,0,0,0.07); }
 
         /* Premium topbar */
         header {
@@ -121,7 +123,7 @@
 
     <div id="drawer-evidence" class="fixed right-0 top-0 bottom-0 w-96 bg-white dark:bg-navy-900 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col" style="border-left:1px solid #e8ecf4;">
         <div class="p-6 border-b border-slate-100 dark:border-navy-700 flex justify-between items-center">
-            <h3 class="text-lg font-semibold">Evidence & Confidence</h3>
+            <h2 class="text-2xl font-semibold">Evidence & Confidence</h2>
             <button onclick="closeAllDrawers()" class="p-2 hover:bg-slate-100 dark:hover:bg-navy-800 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
         </div>
         <div class="p-6 flex-1 overflow-y-auto space-y-6" id="drawer-evidence-content">
@@ -133,16 +135,16 @@
         <div class="absolute inset-0 bg-navy-900/60 backdrop-blur-sm" onclick="closeModal()"></div>
         <div class="bg-white dark:bg-navy-900 p-8 rounded-2xl shadow-2xl w-[480px] relative z-10 fade-in" style="border:1px solid #e8ecf4;">
             <button onclick="closeModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-600 dark:hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-2xl flex items-center justify-center mb-6">
                 <i data-lucide="alert-circle" class="w-6 h-6"></i>
             </div>
-            <h3 class="text-xl font-bold mb-2" id="modal-title">Confirm Action</h3>
+            <h2 class="text-2xl font-bold mb-2" id="modal-title">Confirm Action</h2>
             <p class="text-slate-500 dark:text-slate-400 mb-8" id="modal-desc">Are you sure you want to proceed?</p>
-            <div class="flex gap-4 justify-end" id="modal-footer-action">
+            <div class="flex gap-6 justify-end" id="modal-footer-action">
                 <button onclick="closeModal()" class="px-4 py-2 border border-slate-200 dark:border-navy-700 rounded-xl hover:bg-slate-50 dark:hover:bg-navy-800 transition-colors text-sm font-medium">Cancel</button>
-                <button onclick="confirmModalAction()" class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm transition-colors text-sm font-semibold">Approve</button>
+                <button onclick="confirmModalAction()" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm transition-colors text-sm font-semibold">Approve</button>
             </div>
-            <div class="flex gap-4 justify-end hidden" id="modal-footer-info">
+            <div class="flex gap-6 justify-end hidden" id="modal-footer-info">
                 <button onclick="closeModal()" class="px-6 py-2 border border-slate-200 dark:border-navy-700 rounded-xl hover:bg-slate-50 dark:hover:bg-navy-800 transition-colors text-sm font-medium">Close</button>
             </div>
         </div>
@@ -160,20 +162,20 @@
         <div class="px-4 pt-6 pb-2 flex-1 overflow-y-auto min-h-0">
             <!-- Logo -->
             <div class="flex items-center gap-3 mb-8 px-2">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold tracking-tighter text-sm" style="background: linear-gradient(135deg,#6366f1,#4f46e5);">M</div>
-                <h1 class="font-bold text-lg tracking-tight">MERIDIAN</h1>
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold tracking-tighter text-sm" style="background: linear-gradient(135deg,#3b82f6,#2563eb);">M</div>
+                <h1 class="font-bold text-2xl tracking-tight">MERIDIAN</h1>
             </div>
 
             <nav class="space-y-0.5" id="main-nav">
                 <button onclick="nav('overview')" id="nav-overview" class="nav-btn nav-active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4 flex-shrink-0 text-indigo-500"></i>
+                    <i data-lucide="layout-dashboard" class="w-4 h-4 flex-shrink-0 text-blue-500"></i>
                     <span>Overview</span>
                 </button>
 
                 <div class="pt-5 pb-1.5 px-3 text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Workforce Intelligence</div>
                 <button onclick="nav('exposure')" id="nav-exposure" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
                     <div class="flex items-center gap-3 min-w-0">
-                        <i data-lucide="cpu" class="w-4 h-4 flex-shrink-0 text-violet-500"></i>
+                        <i data-lucide="cpu" class="w-4 h-4 flex-shrink-0 text-sky-500"></i>
                         <span>AI Exposure</span>
                     </div>
                     <span class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></span>
@@ -206,27 +208,27 @@
                     <span>Data & Evidence</span>
                 </button>
                 <button onclick="nav('roadmap')" id="nav-roadmap" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
-                    <i data-lucide="map" class="w-4 h-4 flex-shrink-0 text-indigo-400"></i>
+                    <i data-lucide="map" class="w-4 h-4 flex-shrink-0 text-blue-400"></i>
                     <span>90-Day Roadmap</span>
                 </button>
                 <button onclick="nav('economics')" id="nav-economics" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
-                    <i data-lucide="pie-chart" class="w-4 h-4 flex-shrink-0 text-pink-500"></i>
+                    <i data-lucide="pie-chart" class="w-4 h-4 flex-shrink-0 text-cyan-500"></i>
                     <span>Economics</span>
                 </button>
                 <button onclick="nav('stakeholders')" id="nav-stakeholders" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-navy-800 transition-all">
-                    <i data-lucide="heart-handshake" class="w-4 h-4 flex-shrink-0 text-rose-500"></i>
+                    <i data-lucide="heart-handshake" class="w-4 h-4 flex-shrink-0 text-teal-500"></i>
                     <span>Stakeholders</span>
                 </button>
             </nav>
         </div>
 
         <!-- Sidebar Footer -->
-        <div class="p-4 sidebar-footer">
+        <div class="p-6 sidebar-footer">
             <button onclick="toggleTheme()" class="w-full py-2 mb-3 rounded-xl text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white flex justify-center items-center gap-2 transition-all hover:bg-white dark:hover:bg-navy-800 border border-transparent hover:border-slate-200 dark:hover:border-navy-700">
-                <i data-lucide="moon" class="w-3.5 h-3.5 text-indigo-400" id="theme-icon"></i> Toggle Theme
+                <i data-lucide="moon" class="w-3.5 h-3.5 text-blue-400" id="theme-icon"></i> Toggle Theme
             </button>
             <div class="flex items-center gap-3 cursor-pointer p-2 rounded-xl hover:bg-white dark:hover:bg-navy-800 transition-all">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">DH</div>
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-sky-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">DH</div>
                 <div class="overflow-hidden">
                     <p class="text-sm font-semibold truncate">Director of Human Capital</p>
                     <p class="text-xs text-slate-400 truncate">Project Meridian</p>
@@ -239,8 +241,8 @@
     <main class="flex-1 flex flex-col relative">
         <!-- Topbar -->
         <header class="h-16 flex items-center justify-between px-8 z-10 sticky top-0">
-            <h2 class="text-lg font-semibold" id="topbar-title" data-i18n="nav_overview">Overview</h2>
-            <div class="flex items-center gap-4">
+            <h2 class="text-2xl font-semibold" id="topbar-title" data-i18n="nav_overview">Overview</h2>
+            <div class="flex items-center gap-6">
                 <div class="relative">
                     <i data-lucide="search" class="w-4 h-4 absolute left-3 top-2.5 text-slate-400"></i>
                     <input type="text" placeholder="Search..." class="pl-9 pr-4 py-1.5 bg-slate-100 dark:bg-navy-800 border-none rounded-full text-sm focus:ring-2 focus:ring-accent-500 outline-none w-64 transition-all dark:text-white placeholder-slate-400">
@@ -258,18 +260,18 @@
             <!-- SCREEN 1: OVERVIEW -->
             <div id="view-overview" class="view-screen max-w-6xl mx-auto space-y-8 fade-in">
                 <div class="mb-8">
-                    <h1 class="text-3xl font-bold mb-2 tracking-tight" data-i18n="overview_title">Workforce transformation, made decision-ready.</h1>
+                    <h1 class="text-4xl font-bold mb-2 tracking-tight" data-i18n="overview_title">Workforce transformation, made decision-ready.</h1>
                     <p class="text-slate-500 dark:text-slate-400" data-i18n="overview_subtitle">Project Meridian · Human Capital Transformation</p>
                 </div>
 
                 <!-- Alert -->
-                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 rounded-xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
-                    <div class="flex items-start gap-4">
+                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 rounded-xl p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
+                    <div class="flex items-start gap-6">
                         <div class="p-2 bg-red-100 dark:bg-red-900/40 rounded-lg text-red-600 dark:text-red-400 mt-1 md:mt-0">
                             <i data-lucide="alert-triangle" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-red-900 dark:text-red-200 text-lg" data-i18n="decision_req">Decision required</h3>
+                            <h2 class="font-bold text-red-900 dark:text-red-200 text-2xl" data-i18n="decision_req">Decision required</h2>
                             <p class="text-red-700 dark:text-red-300/80 mt-1">Field Metering & Manual Operations is ~70% automatable within 18 months.</p>
                         </div>
                     </div>
@@ -277,21 +279,21 @@
                 </div>
 
                 <!-- KPIs -->
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_emp">Employees</p><p class="text-xl font-bold">52,000</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_titles">Job Titles</p><p class="text-xl font-bold">1,800+</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-amber-600 dark:text-amber-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_missing">Missing Skill Data</p><p class="text-xl font-bold text-amber-600 dark:text-amber-500">45%</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-red-200 dark:border-red-900/30 shadow-sm"><p class="text-red-600 dark:text-red-400 text-xs font-semibold mb-1 truncate" data-i18n="kpi_exposure">FM Automation</p><p class="text-xl font-bold text-red-600 dark:text-red-400">70%</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_disp">Displaced Work</p><p class="text-xl font-bold">4,200</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_val">Engagement Value</p><p class="text-xl font-bold">Rp 3.5B</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800 shadow-sm"><p class="text-accent-600 text-xs font-semibold mb-1 truncate" data-i18n="kpi_board">Board Milestone</p><p class="text-xl font-bold text-accent-600">90 Days</p></div>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_emp">Employees</p><p class="text-2xl font-bold">52,000</p></div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_titles">Job Titles</p><p class="text-2xl font-bold">1,800+</p></div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl shadow-sm"><p class="text-amber-600 dark:text-amber-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_missing">Missing Skill Data</p><p class="text-2xl font-bold text-amber-600 dark:text-amber-500">45%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-6 rounded-xl border border-red-200 dark:border-red-900/30 shadow-sm"><p class="text-red-600 dark:text-red-400 text-xs font-semibold mb-1 truncate" data-i18n="kpi_exposure">FM Automation</p><p class="text-2xl font-bold text-red-600 dark:text-red-400">70%</p></div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_disp">Displaced Work</p><p class="text-2xl font-bold">4,200</p></div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl shadow-sm"><p class="text-slate-500 text-xs font-semibold mb-1 truncate" data-i18n="kpi_val">Engagement Value</p><p class="text-2xl font-bold">Rp 3.5B</p></div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl shadow-sm"><p class="text-accent-600 text-xs font-semibold mb-1 truncate" data-i18n="kpi_board">Board Milestone</p><p class="text-2xl font-bold text-accent-600">90 Days</p></div>
                 </div>
 
                 <div class="grid lg:grid-cols-2 gap-8">
                     <!-- AI Exposure Bars -->
                     <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col">
                         <div class="flex justify-between items-center mb-6">
-                            <h3 class="font-bold text-lg" data-i18n="chart_exposure">AI Exposure by Job Family</h3>
+                            <h2 class="font-bold text-2xl" data-i18n="chart_exposure">AI Exposure by Job Family</h2>
                             <button onclick="nav('exposure')" class="text-sm text-accent-600 font-medium hover:underline">View Map &rarr;</button>
                         </div>
                         <div class="space-y-4 flex-1 flex flex-col justify-center">
@@ -320,7 +322,7 @@
 
                     <!-- Funnel -->
                     <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col">
-                        <h3 class="font-bold text-lg mb-2" data-i18n="funnel_title">Workforce Transition Funnel</h3>
+                        <h2 class="font-bold text-2xl mb-2" data-i18n="funnel_title">Workforce Transition Funnel</h2>
                         <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 italic border-l-2 border-accent-500 pl-3">"4,200 roles of work at risk ≠ 4,200 people to lay off."</p>
                         
                         <div class="flex-1 flex flex-col justify-center space-y-2">
@@ -342,7 +344,7 @@
             <div id="view-exposure" class="view-screen hidden max-w-6xl mx-auto space-y-6 fade-in h-full flex flex-col">
                 <div class="flex justify-between items-end">
                     <div>
-                        <h1 class="text-3xl font-bold mb-2">AI Exposure Map</h1>
+                        <h1 class="text-4xl font-bold mb-2">AI Exposure Map</h1>
                         <p class="text-slate-500 dark:text-slate-400">Risk versus timeline across job families.</p>
                     </div>
                     <div class="flex gap-2">
@@ -373,7 +375,7 @@
                             <div class="absolute -bottom-6 left-[60%] text-xs text-slate-500">12-18m</div>
                             <div class="absolute -bottom-6 left-[85%] text-xs text-slate-500">24m+</div>
 
-                            <div onclick="nav('field-metering')" class="absolute bottom-[70%] left-[60%] transform -translate-x-1/2 translate-y-1/2 w-24 h-24 bg-red-500/20 border-2 border-red-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-500/40 transition-colors shadow-lg shadow-red-500/20 group">
+                            <div onclick="nav('field-metering')" class="absolute bottom-[70%] left-[60%] transform -translate-x-1/2 translate-y-1/2 w-24 h-24 bg-red-500/20 border-2 border-red-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-red-500/40 transition-colors shadow-lg shadow-black/10 group">
                                 <span class="text-xs font-bold text-red-700 dark:text-red-200 text-center leading-tight">Field<br>Metering</span>
                             </div>
                             
@@ -388,10 +390,10 @@
                     </div>
 
                     <!-- Featured Card -->
-                    <div class="w-80 flex flex-col gap-4">
-                        <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-5 shadow-sm">
+                    <div class="w-80 flex flex-col gap-6">
+                        <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm">
                             <div class="flex justify-between items-start mb-4">
-                                <h3 class="font-bold text-lg leading-tight">Field Metering & Manual Operations</h3>
+                                <h2 class="font-bold text-2xl leading-tight">Field Metering & Manual Operations</h2>
                                 <span class="bg-red-100 text-red-700 text-xs px-2 py-1 rounded font-bold">HIGH</span>
                             </div>
                             <div class="space-y-3 mb-6">
@@ -417,7 +419,7 @@
                 <div class="flex justify-between items-end">
                     <div>
                         <div class="flex items-center gap-3 mb-2">
-                            <h1 class="text-3xl font-bold">Field Metering & Manual Operations</h1>
+                            <h1 class="text-4xl font-bold">Field Metering & Manual Operations</h1>
                             <span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs px-2 py-1 rounded font-bold border border-red-200 dark:border-red-800">HIGH EXPOSURE</span>
                         </div>
                         <p class="text-slate-500 dark:text-slate-400">Smart meters, IoT and AI-assisted operations are expected to automate a significant portion of current manual work.</p>
@@ -425,13 +427,13 @@
                     <button onclick="nav('redeployment')" class="px-4 py-2 bg-accent-600 hover:bg-accent-700 text-white rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center gap-2"><i data-lucide="repeat" class="w-4 h-4"></i> Plan Redeployment</button>
                 </div>
 
-                <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800"><p class="text-slate-500 text-xs mb-1">Employees</p><p class="text-lg font-bold">6,000</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-red-200 dark:border-red-900/30"><p class="text-red-600 dark:text-red-400 text-xs mb-1">Exposure</p><p class="text-lg font-bold text-red-600 dark:text-red-400">70%</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800"><p class="text-slate-500 text-xs mb-1">Displaced Work</p><p class="text-lg font-bold">4,200</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800"><p class="text-slate-500 text-xs mb-1">Horizon</p><p class="text-lg font-bold">18 mos</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-slate-200 dark:border-navy-800"><p class="text-slate-500 text-xs mb-1">Reskillability</p><p class="text-lg font-bold">62%</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/30"><p class="text-emerald-600 dark:text-emerald-400 text-xs mb-1">Redeployable</p><p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">3,100</p></div>
+                <div class="grid grid-cols-3 md:grid-cols-6 gap-6">
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl"><p class="text-slate-500 text-xs mb-1">Employees</p><p class="text-lg font-bold">6,000</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-6 rounded-xl border border-red-200 dark:border-red-900/30"><p class="text-red-600 dark:text-red-400 text-xs mb-1">Exposure</p><p class="text-lg font-bold text-red-600 dark:text-red-400">70%</p></div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl"><p class="text-slate-500 text-xs mb-1">Displaced Work</p><p class="text-lg font-bold">4,200</p></div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl"><p class="text-slate-500 text-xs mb-1">Horizon</p><p class="text-lg font-bold">18 mos</p></div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl"><p class="text-slate-500 text-xs mb-1">Reskillability</p><p class="text-lg font-bold">62%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-6 rounded-xl border border-emerald-200 dark:border-emerald-900/30"><p class="text-emerald-600 dark:text-emerald-400 text-xs mb-1">Redeployable</p><p class="text-lg font-bold text-emerald-600 dark:text-emerald-400">3,100</p></div>
                 </div>
 
                 <!-- Tabs -->
@@ -446,14 +448,14 @@
                 <div id="fm-tabs" class="pt-4">
                     <div id="tab-content-overview" class="fm-tab-content space-y-6">
                         <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm">
-                            <h3 class="font-bold text-lg mb-4">Process Transformation</h3>
+                            <h2 class="font-bold text-2xl mb-4">Process Transformation</h2>
                             <div class="grid md:grid-cols-2 gap-8">
                                 <div class="space-y-4">
                                     <div class="text-xs font-bold text-slate-400 uppercase">Before (Current)</div>
                                     <div class="flex flex-col gap-2">
-                                        <div class="p-3 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded text-sm text-slate-500 line-through">Manual field reading</div>
+                                        <div class="p-3 bg-slate-50 dark:bg-navy-800 rounded text-sm text-slate-500 line-through">Manual field reading</div>
                                         <div class="w-4 h-4 mx-auto text-slate-300"><i data-lucide="arrow-down" class="w-full h-full"></i></div>
-                                        <div class="p-3 bg-slate-50 dark:bg-navy-800 border border-slate-200 dark:border-navy-700 rounded text-sm text-slate-500 line-through">Manual data entry</div>
+                                        <div class="p-3 bg-slate-50 dark:bg-navy-800 rounded text-sm text-slate-500 line-through">Manual data entry</div>
                                         <div class="w-4 h-4 mx-auto text-slate-300"><i data-lucide="arrow-down" class="w-full h-full"></i></div>
                                         <div class="p-3 bg-slate-100 dark:bg-navy-700 border border-slate-300 dark:border-navy-600 rounded text-sm font-medium">Regional validation</div>
                                     </div>
@@ -474,14 +476,14 @@
                     
                     <div id="tab-content-breakdown" class="fm-tab-content hidden space-y-4">
                         <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm">
-                            <h3 class="font-bold text-lg mb-4">Activity Automation Potential</h3>
+                            <h2 class="font-bold text-2xl mb-4">Activity Automation Potential</h2>
                             <div class="space-y-4">
-                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Manual meter reading</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-red-500 h-2 rounded" style="width: 95%"></div></div> <span class="text-xs bg-red-100 text-red-700 w-32 text-center px-2 py-1 rounded font-bold">95% AUTOMATABLE</span></div></div>
-                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Data capture</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-red-500 h-2 rounded" style="width: 90%"></div></div> <span class="text-xs bg-red-100 text-red-700 w-32 text-center px-2 py-1 rounded font-bold">90% AUTOMATABLE</span></div></div>
-                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Field inspection</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-amber-500 h-2 rounded" style="width: 40%"></div></div> <span class="text-xs bg-amber-100 text-amber-700 w-32 text-center px-2 py-1 rounded font-bold">40% AUTOMATABLE</span></div></div>
-                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Reporting</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-amber-500 h-2 rounded" style="width: 60%"></div></div> <span class="text-xs bg-amber-100 text-amber-700 w-32 text-center px-2 py-1 rounded font-bold">60% AUTOMATABLE</span></div></div>
-                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Exception handling</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-emerald-500 h-2 rounded" style="width: 15%"></div></div> <span class="text-xs bg-emerald-100 text-emerald-700 w-32 text-center px-2 py-1 rounded font-bold">15% AUTOMATABLE</span></div></div>
-                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Customer escalation</span> <div class="flex items-center gap-4"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-emerald-500 h-2 rounded" style="width: 5%"></div></div> <span class="text-xs bg-emerald-100 text-emerald-700 w-32 text-center px-2 py-1 rounded font-bold">5% AUTOMATABLE</span></div></div>
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Manual meter reading</span> <div class="flex items-center gap-6"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-red-500 h-2 rounded" style="width: 95%"></div></div> <span class="text-xs bg-red-100 text-red-700 w-32 text-center px-2 py-1 rounded font-bold">95% AUTOMATABLE</span></div></div>
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Data capture</span> <div class="flex items-center gap-6"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-red-500 h-2 rounded" style="width: 90%"></div></div> <span class="text-xs bg-red-100 text-red-700 w-32 text-center px-2 py-1 rounded font-bold">90% AUTOMATABLE</span></div></div>
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Field inspection</span> <div class="flex items-center gap-6"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-amber-500 h-2 rounded" style="width: 40%"></div></div> <span class="text-xs bg-amber-100 text-amber-700 w-32 text-center px-2 py-1 rounded font-bold">40% AUTOMATABLE</span></div></div>
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Reporting</span> <div class="flex items-center gap-6"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-amber-500 h-2 rounded" style="width: 60%"></div></div> <span class="text-xs bg-amber-100 text-amber-700 w-32 text-center px-2 py-1 rounded font-bold">60% AUTOMATABLE</span></div></div>
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Exception handling</span> <div class="flex items-center gap-6"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-emerald-500 h-2 rounded" style="width: 15%"></div></div> <span class="text-xs bg-emerald-100 text-emerald-700 w-32 text-center px-2 py-1 rounded font-bold">15% AUTOMATABLE</span></div></div>
+                                <div class="flex items-center justify-between"><span class="text-sm font-medium">Customer escalation</span> <div class="flex items-center gap-6"><div class="w-48 bg-slate-100 dark:bg-navy-800 h-2 rounded"><div class="bg-emerald-500 h-2 rounded" style="width: 5%"></div></div> <span class="text-xs bg-emerald-100 text-emerald-700 w-32 text-center px-2 py-1 rounded font-bold">5% AUTOMATABLE</span></div></div>
                             </div>
                         </div>
                     </div>
@@ -497,7 +499,7 @@
             <!-- SCREEN 4: CAPABILITY ARCHITECTURE -->
             <div id="view-capability" class="view-screen hidden max-w-5xl mx-auto space-y-6 fade-in">
                 <div class="mb-6">
-                    <h1 class="text-3xl font-bold mb-2">Capability Architecture</h1>
+                    <h1 class="text-4xl font-bold mb-2">Capability Architecture</h1>
                     <p class="text-slate-500 dark:text-slate-400">Collapsing 1,800+ legacy titles into a defensible capability structure.</p>
                 </div>
 
@@ -573,7 +575,7 @@
                 </div>
 
                 <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm mt-8">
-                    <h3 class="font-bold text-lg mb-6 border-b border-slate-100 dark:border-navy-800 pb-2">Capability Profile Map</h3>
+                    <h2 class="font-bold text-2xl mb-6 border-b border-slate-100 dark:border-navy-800 pb-2">Capability Profile Map</h2>
                     
                     <div class="space-y-6">
                         <!-- Skill 1 -->
@@ -582,7 +584,7 @@
                                 <span class="font-medium">Field Operations</span>
                                 <span class="text-slate-500">Level: Advanced</span>
                             </div>
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-6">
                                 <div class="flex-1 flex gap-1 h-2">
                                     <div class="h-full flex-1 bg-accent-500 rounded-l"></div><div class="h-full flex-1 bg-accent-500"></div><div class="h-full flex-1 bg-accent-500"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800 rounded-r"></div>
                                 </div>
@@ -596,7 +598,7 @@
                                 <span class="font-medium">Safety Compliance</span>
                                 <span class="text-slate-500">Level: Advanced</span>
                             </div>
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-6">
                                 <div class="flex-1 flex gap-1 h-2">
                                     <div class="h-full flex-1 bg-accent-500 rounded-l"></div><div class="h-full flex-1 bg-accent-500"></div><div class="h-full flex-1 bg-accent-500"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800 rounded-r"></div>
                                 </div>
@@ -610,7 +612,7 @@
                                 <span class="font-medium">Data Interpretation</span>
                                 <span class="text-slate-500">Level: Foundation</span>
                             </div>
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-6">
                                 <div class="flex-1 flex gap-1 h-2">
                                     <div class="h-full flex-1 bg-slate-400 rounded-l"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800 rounded-r"></div>
                                 </div>
@@ -627,7 +629,7 @@
                                 <span class="font-medium text-slate-400">IoT Monitoring</span>
                                 <span class="text-slate-400">Level: None</span>
                             </div>
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-6">
                                 <div class="flex-1 flex gap-1 h-2">
                                     <div class="h-full flex-1 bg-slate-100 dark:bg-navy-800 rounded-l"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800"></div><div class="h-full flex-1 bg-slate-100 dark:bg-navy-800 rounded-r"></div>
                                 </div>
@@ -642,7 +644,7 @@
             <div id="view-redeployment" class="view-screen hidden max-w-6xl mx-auto space-y-6 fade-in">
                 <div class="mb-6 flex justify-between items-end">
                     <div>
-                        <h1 class="text-3xl font-bold mb-2">Redeployment Opportunities</h1>
+                        <h1 class="text-4xl font-bold mb-2">Redeployment Opportunities</h1>
                         <p class="text-slate-500 dark:text-slate-400">Algorithmically matching displaced capabilities to emerging demand.</p>
                     </div>
                     <div class="text-right">
@@ -656,7 +658,7 @@
                     <div class="bg-white dark:bg-navy-900 rounded-xl border-2 border-emerald-500 p-6 shadow-md relative overflow-hidden flex flex-col justify-between">
                         <div class="absolute top-0 right-0 bg-emerald-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">TOP MATCH</div>
                         <div>
-                            <h3 class="font-bold text-lg mb-4 text-emerald-900 dark:text-emerald-100">Smart Meter Operations</h3>
+                            <h2 class="font-bold text-2xl mb-4 text-emerald-900 dark:text-emerald-100">Smart Meter Operations</h2>
                             <div class="grid grid-cols-2 gap-y-3 text-sm mb-6">
                                 <div class="text-slate-500">Capability Match</div><div class="font-bold text-emerald-600">87%</div>
                                 <div class="text-slate-500">Primary Gap</div><div class="font-medium text-slate-700 dark:text-slate-300">IoT Monitoring</div>
@@ -670,7 +672,7 @@
                     <!-- Card 2 -->
                     <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col justify-between">
                         <div>
-                            <h3 class="font-bold text-lg mb-4">IoT Field Support</h3>
+                            <h2 class="font-bold text-2xl mb-4">IoT Field Support</h2>
                             <div class="grid grid-cols-2 gap-y-3 text-sm mb-6">
                                 <div class="text-slate-500">Capability Match</div><div class="font-bold text-accent-600">81%</div>
                                 <div class="text-slate-500">Primary Gap</div><div class="font-medium text-slate-700 dark:text-slate-300">Digital Diagnostics</div>
@@ -684,7 +686,7 @@
                     <!-- Card 3 -->
                     <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col justify-between">
                         <div>
-                            <h3 class="font-bold text-lg mb-4">Asset Monitoring</h3>
+                            <h2 class="font-bold text-2xl mb-4">Asset Monitoring</h2>
                             <div class="grid grid-cols-2 gap-y-3 text-sm mb-6">
                                 <div class="text-slate-500">Capability Match</div><div class="font-bold text-amber-600">74%</div>
                                 <div class="text-slate-500">Primary Gap</div><div class="font-medium text-slate-700 dark:text-slate-300">Data Interpretation</div>
@@ -698,7 +700,7 @@
                     <!-- Card 4 -->
                     <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col justify-between">
                         <div>
-                            <h3 class="font-bold text-lg mb-4">Customer Technical Resolution</h3>
+                            <h2 class="font-bold text-2xl mb-4">Customer Technical Resolution</h2>
                             <div class="grid grid-cols-2 gap-y-3 text-sm mb-6">
                                 <div class="text-slate-500">Capability Match</div><div class="font-bold text-amber-600">69%</div>
                                 <div class="text-slate-500">Primary Gap</div><div class="font-medium text-slate-700 dark:text-slate-300">Customer Resolution</div>
@@ -716,7 +718,7 @@
                 <button onclick="nav('redeployment')" class="text-sm text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center gap-1 mb-2"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Options</button>
                 <div class="flex justify-between items-end">
                     <div>
-                        <h1 class="text-3xl font-bold mb-2" id="plan-header-title">Transition Plan: Cohort A</h1>
+                        <h1 class="text-4xl font-bold mb-2" id="plan-header-title">Transition Plan: Cohort A</h1>
                         <p class="text-slate-500 dark:text-slate-400" id="plan-header-sub">Destination: Smart Meter Operations</p>
                     </div>
                     <button id="btn-approve-cohort" onclick="openModal('Approve Cohort A', 'Add 1,250 employees to the formal transition plan? This will notify Regional HR.', 'Success: 1,250 employees added to transition plan.')" class="px-6 py-2 bg-accent-600 hover:bg-accent-700 text-white rounded-lg font-medium shadow-sm transition-colors">Approve Cohort</button>
@@ -734,9 +736,9 @@
                         
                         <div class="relative pl-12 mb-10">
                             <div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-accent-500 border-4 border-white dark:border-navy-900 shadow"></div>
-                            <h4 class="font-bold text-lg mb-1">Days 0–30: Assessment & Validation</h4>
+                            <h2 class="font-bold text-2xl mb-1">Days 0–30: Assessment & Validation</h2>
                             <p class="text-sm text-slate-500 mb-3">Confirm IoT baseline skills using simulated environment and manager validation.</p>
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-6">
                                 <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-accent-500 h-2 rounded-full" style="width: 100%"></div></div>
                                 <span class="text-xs font-bold text-slate-400">100%</span>
                             </div>
@@ -744,9 +746,9 @@
 
                         <div class="relative pl-12 mb-10">
                             <div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-slate-300 dark:bg-navy-600 border-4 border-white dark:border-navy-900"></div>
-                            <h4 class="font-bold text-lg mb-1">Days 31–60: Learning + Simulation</h4>
+                            <h2 class="font-bold text-2xl mb-1">Days 31–60: Learning + Simulation</h2>
                             <p class="text-sm text-slate-500 mb-3">Intensive upskilling on Digital Diagnostics. Virtual reality modules.</p>
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-6">
                                 <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-accent-500 h-2 rounded-full" style="width: 20%"></div></div>
                                 <span class="text-xs font-bold text-slate-400">20%</span>
                             </div>
@@ -754,7 +756,7 @@
 
                         <div class="relative pl-12">
                             <div class="absolute left-0 top-1 w-5 h-5 rounded-full bg-slate-200 dark:bg-navy-700 border-4 border-white dark:border-navy-900"></div>
-                            <h4 class="font-bold text-lg mb-1 text-slate-400">Days 61–90: Pilot Deployment</h4>
+                            <h2 class="font-bold text-2xl mb-1 text-slate-400">Days 61–90: Pilot Deployment</h2>
                             <p class="text-sm text-slate-500">Shadowing in Regional Unit 1 & 2. Supervised field runs.</p>
                         </div>
                     </div>
@@ -764,35 +766,35 @@
             <!-- SCREEN 8 & 9: DATA QUALITY & EVIDENCE -->
             <div id="view-evidence" class="view-screen hidden max-w-5xl mx-auto space-y-6 fade-in">
                 <div class="mb-6">
-                    <h1 class="text-3xl font-bold mb-2">Data Quality & Evidence</h1>
+                    <h1 class="text-4xl font-bold mb-2">Data Quality & Evidence</h1>
                     <p class="text-slate-500 dark:text-slate-400">Transparency on system inputs driving AI inferences.</p>
                 </div>
 
-                <div class="grid grid-cols-4 gap-4 mb-8">
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/30"><p class="text-slate-500 text-xs mb-1">Identity Matching</p><p class="text-xl font-bold text-emerald-600">92%</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-red-200 dark:border-red-900/30"><p class="text-slate-500 text-xs mb-1">Skill Completeness</p><p class="text-xl font-bold text-red-600">55%</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-amber-200 dark:border-amber-900/30"><p class="text-slate-500 text-xs mb-1">Taxonomy Consistency</p><p class="text-xl font-bold text-amber-600">61%</p></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded-xl border border-amber-200 dark:border-amber-900/30"><p class="text-slate-500 text-xs mb-1">Perf Reliability</p><p class="text-xl font-bold text-amber-600">48%</p></div>
+                <div class="grid grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white dark:bg-navy-900 p-6 rounded-xl border border-emerald-200 dark:border-emerald-900/30"><p class="text-slate-500 text-xs mb-1">Identity Matching</p><p class="text-2xl font-bold text-emerald-600">92%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-6 rounded-xl border border-red-200 dark:border-red-900/30"><p class="text-slate-500 text-xs mb-1">Skill Completeness</p><p class="text-2xl font-bold text-red-600">55%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-6 rounded-xl border border-amber-200 dark:border-amber-900/30"><p class="text-slate-500 text-xs mb-1">Taxonomy Consistency</p><p class="text-2xl font-bold text-amber-600">61%</p></div>
+                    <div class="bg-white dark:bg-navy-900 p-6 rounded-xl border border-amber-200 dark:border-amber-900/30"><p class="text-slate-500 text-xs mb-1">Perf Reliability</p><p class="text-2xl font-bold text-amber-600">48%</p></div>
                 </div>
                 
-                <h3 class="font-bold text-lg mb-2 mt-8">Source Systems Connectivity</h3>
-                <div class="grid md:grid-cols-2 gap-4 mb-8">
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded border border-slate-200 dark:border-navy-800 flex justify-between items-center"><span class="font-medium">SAP SuccessFactors</span> <span class="text-xs bg-amber-100 text-amber-700 px-2 rounded">Partial Historical</span></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded border border-slate-200 dark:border-navy-800 flex justify-between items-center"><span class="font-medium">Legacy Competency System</span> <span class="text-xs bg-red-100 text-red-700 px-2 rounded">Low Quality</span></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded border border-slate-200 dark:border-navy-800 flex justify-between items-center"><span class="font-medium">Moodle LMS</span> <span class="text-xs bg-red-100 text-red-700 px-2 rounded">Low Taxonomy</span></div>
-                    <div class="bg-white dark:bg-navy-900 p-4 rounded border border-slate-200 dark:border-navy-800 flex justify-between items-center"><span class="font-medium">Oracle Payroll</span> <span class="text-xs bg-slate-200 text-slate-700 px-2 rounded flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> Restricted</span></div>
+                <h2 class="font-bold text-2xl mb-2 mt-8">Source Systems Connectivity</h2>
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl flex justify-between items-center"><span class="font-medium">SAP SuccessFactors</span> <span class="text-xs bg-amber-100 text-amber-700 px-2 rounded">Partial Historical</span></div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl flex justify-between items-center"><span class="font-medium">Legacy Competency System</span> <span class="text-xs bg-red-100 text-red-700 px-2 rounded">Low Quality</span></div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl flex justify-between items-center"><span class="font-medium">Moodle LMS</span> <span class="text-xs bg-red-100 text-red-700 px-2 rounded">Low Taxonomy</span></div>
+                    <div class="bg-slate-50 dark:bg-navy-900/50 p-6 rounded-xl flex justify-between items-center"><span class="font-medium">Oracle Payroll</span> <span class="text-xs bg-slate-200 text-slate-700 px-2 rounded flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> Restricted</span></div>
                 </div>
 
                 <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 overflow-hidden shadow-sm">
                     <table class="w-full text-left text-sm">
                         <thead class="bg-slate-50 dark:bg-navy-800/50 text-slate-500 border-b border-slate-200 dark:border-navy-800">
-                            <tr><th class="p-4 font-medium">Signal</th><th class="p-4 font-medium">Source</th><th class="p-4 font-medium">Status</th><th class="p-4 font-medium">Confidence</th></tr>
+                            <tr><th class="p-6 font-medium">Signal</th><th class="p-6 font-medium">Source</th><th class="p-6 font-medium">Status</th><th class="p-6 font-medium">Confidence</th></tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-navy-800">
-                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('Employee ID match across systems is solid.')"><td class="p-4 font-medium">Employee Identity</td><td class="p-4 text-slate-500">SAP SuccessFactors</td><td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs">Measured</span></td><td class="p-4 font-semibold">High</td></tr>
-                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('Skill records are missing for 45% of the workforce. Action required: Baseline assessment.')"><td class="p-4 font-medium">Skill Record</td><td class="p-4 text-slate-500">Moodle LMS</td><td class="p-4"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs">Missing (45%)</span></td><td class="p-4 font-semibold text-red-500">Low</td></tr>
-                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('AI mapped legacy titles to capability taxonomy. Manual validation needed.')"><td class="p-4 font-medium">Capability Level</td><td class="p-4 text-slate-500">AI Role Mapping</td><td class="p-4"><span class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-xs">Inferred</span></td><td class="p-4 font-semibold text-amber-500">Medium</td></tr>
-                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('Compensation data unavailable under Ministry data-governance policy.')"><td class="p-4 font-medium">Compensation</td><td class="p-4 text-slate-500">Oracle Payroll</td><td class="p-4"><span class="bg-slate-200 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs flex items-center gap-1 w-max"><i data-lucide="lock" class="w-3 h-3"></i> Unavailable</span></td><td class="p-4 font-semibold text-slate-400">N/A</td></tr>
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('Employee ID match across systems is solid.')"><td class="p-6 font-medium">Employee Identity</td><td class="p-6 text-slate-500">SAP SuccessFactors</td><td class="p-6"><span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs">Measured</span></td><td class="p-6 font-semibold">High</td></tr>
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('Skill records are missing for 45% of the workforce. Action required: Baseline assessment.')"><td class="p-6 font-medium">Skill Record</td><td class="p-6 text-slate-500">Moodle LMS</td><td class="p-6"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs">Missing (45%)</span></td><td class="p-6 font-semibold text-red-500">Low</td></tr>
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('AI mapped legacy titles to capability taxonomy. Manual validation needed.')"><td class="p-6 font-medium">Capability Level</td><td class="p-6 text-slate-500">AI Role Mapping</td><td class="p-6"><span class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-xs">Inferred</span></td><td class="p-6 font-semibold text-amber-500">Medium</td></tr>
+                            <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50" onclick="showEvidence('Compensation data unavailable under Ministry data-governance policy.')"><td class="p-6 font-medium">Compensation</td><td class="p-6 text-slate-500">Oracle Payroll</td><td class="p-6"><span class="bg-slate-200 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs flex items-center gap-1 w-max"><i data-lucide="lock" class="w-3 h-3"></i> Unavailable</span></td><td class="p-6 font-semibold text-slate-400">N/A</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -801,35 +803,35 @@
             <!-- SCREEN 10: ROADMAP -->
             <div id="view-roadmap" class="view-screen hidden max-w-4xl mx-auto space-y-6 fade-in">
                 <div class="mb-8">
-                    <h1 class="text-3xl font-bold mb-2">90-Day Roadmap</h1>
+                    <h1 class="text-4xl font-bold mb-2">90-Day Roadmap</h1>
                     <p class="text-slate-500 dark:text-slate-400">Path to Board-ready workforce transition plan.</p>
                 </div>
                 <div class="space-y-4">
-                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-emerald-200 dark:border-emerald-900/40 p-5 flex gap-6 cursor-pointer hover:shadow-md transition">
-                        <div class="font-bold text-xl text-emerald-600 dark:text-emerald-400 w-20 flex-shrink-0">Day 0</div>
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-emerald-200 dark:border-emerald-900/40 p-6 flex gap-6 cursor-pointer hover:shadow-md transition">
+                        <div class="font-bold text-2xl text-emerald-600 dark:text-emerald-400 w-20 flex-shrink-0">Day 0</div>
                         <div>
-                            <h3 class="font-bold mb-1">Baseline workforce intelligence</h3>
+                            <h2 class="font-bold mb-1">Baseline workforce intelligence</h2>
                             <p class="text-sm text-slate-500 flex items-center gap-1"><i data-lucide="check-circle" class="w-4 h-4 text-emerald-500"></i> Completed</p>
                         </div>
                     </div>
-                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-accent-200 dark:border-accent-900/40 p-5 flex gap-6 shadow-md cursor-pointer hover:shadow-lg transition ring-2 ring-accent-500/20" onclick="nav('overview')">
-                        <div class="font-bold text-xl text-accent-600 w-20 flex-shrink-0">Day 30</div>
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-accent-200 dark:border-accent-900/40 p-6 flex gap-6 shadow-md cursor-pointer hover:shadow-lg transition ring-2 ring-accent-500/20" onclick="nav('overview')">
+                        <div class="font-bold text-2xl text-accent-600 w-20 flex-shrink-0">Day 30</div>
                         <div>
-                            <h3 class="font-bold mb-1 flex items-center gap-2">AI Exposure Map & Risk ID <span class="bg-accent-100 dark:bg-accent-900/30 text-accent-700 dark:text-accent-400 text-xs px-2 py-0.5 rounded font-bold">CURRENT</span></h3>
+                            <h2 class="font-bold mb-1 flex items-center gap-2">AI Exposure Map & Risk ID <span class="bg-accent-100 dark:bg-accent-900/30 text-accent-700 dark:text-accent-400 text-xs px-2 py-0.5 rounded font-bold">CURRENT</span></h2>
                             <p class="text-sm text-slate-500 mb-2">Identify Field Metering risk and initiate Union engagement.</p>
                         </div>
                     </div>
-                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-5 flex gap-6 opacity-60 cursor-pointer hover:opacity-100 transition" onclick="nav('capability')">
-                        <div class="font-bold text-xl text-slate-400 w-20 flex-shrink-0">Day 60</div>
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 flex gap-6 opacity-60 cursor-pointer hover:opacity-100 transition" onclick="nav('capability')">
+                        <div class="font-bold text-2xl text-slate-400 w-20 flex-shrink-0">Day 60</div>
                         <div>
-                            <h3 class="font-bold mb-1">Capability Architecture Pilots</h3>
+                            <h2 class="font-bold mb-1">Capability Architecture Pilots</h2>
                             <p class="text-sm text-slate-500">Draft redeployment cohorts based on inferred profiles.</p>
                         </div>
                     </div>
-                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-5 flex gap-6 opacity-60 cursor-pointer hover:opacity-100 transition" onclick="nav('decision')">
-                        <div class="font-bold text-xl text-slate-400 w-20 flex-shrink-0">Day 90</div>
+                    <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 flex gap-6 opacity-60 cursor-pointer hover:opacity-100 transition" onclick="nav('decision')">
+                        <div class="font-bold text-2xl text-slate-400 w-20 flex-shrink-0">Day 90</div>
                         <div>
-                            <h3 class="font-bold mb-1">Board-ready workforce transition plan</h3>
+                            <h2 class="font-bold mb-1">Board-ready workforce transition plan</h2>
                             <p class="text-sm text-slate-500">Proof points, Economics, Decision gates.</p>
                         </div>
                     </div>
@@ -839,13 +841,13 @@
             <!-- SCREEN 11: ECONOMICS -->
             <div id="view-economics" class="view-screen hidden max-w-5xl mx-auto space-y-6 fade-in">
                 <div class="mb-6">
-                    <h1 class="text-3xl font-bold mb-2">Economics & Value</h1>
+                    <h1 class="text-4xl font-bold mb-2">Economics & Value</h1>
                     <p class="text-slate-500 dark:text-slate-400">Illustrative scenarios. <span class="font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded">Note: Payroll data is restricted.</span></p>
                 </div>
                 
                 <div class="grid md:grid-cols-2 gap-8">
                     <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 p-6 shadow-sm">
-                        <h3 class="font-bold text-lg mb-6 border-b border-slate-100 dark:border-navy-800 pb-2">Scenario A: Transform</h3>
+                        <h2 class="font-bold text-2xl mb-6 border-b border-slate-100 dark:border-navy-800 pb-2">Scenario A: Transform</h2>
                         <div class="space-y-4">
                             <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Engagement Investment</span> <span class="font-bold">Rp 3.5B</span></div>
                             <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Reskilling Cost (Est)</span> <span class="font-bold">Scenario Based</span></div>
@@ -855,7 +857,7 @@
                     </div>
                     
                     <div class="bg-slate-50 dark:bg-navy-900/50 rounded-xl border border-slate-200 dark:border-navy-800 p-6 opacity-80">
-                        <h3 class="font-bold text-lg mb-6 border-b border-slate-200 dark:border-navy-700 pb-2">Scenario B: Wait (Cost of Inaction)</h3>
+                        <h2 class="font-bold text-2xl mb-6 border-b border-slate-200 dark:border-navy-700 pb-2">Scenario B: Wait (Cost of Inaction)</h2>
                         <div class="space-y-4">
                             <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Engagement Investment</span> <span class="font-bold">Rp 0</span></div>
                             <div class="flex justify-between items-center"><span class="text-sm text-slate-500">Disruption Cost</span> <span class="font-bold text-red-500">Severe</span></div>
@@ -869,41 +871,41 @@
             <!-- SCREEN 12: STAKEHOLDERS -->
             <div id="view-stakeholders" class="view-screen hidden max-w-5xl mx-auto space-y-6 fade-in">
                 <div class="mb-6">
-                    <h1 class="text-3xl font-bold mb-2">Change & Stakeholders</h1>
+                    <h1 class="text-4xl font-bold mb-2">Change & Stakeholders</h1>
                     <p class="text-slate-500 dark:text-slate-400">Managing perception and alignment.</p>
                 </div>
                 
                 <div class="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-navy-800 overflow-hidden shadow-sm">
                     <table class="w-full text-left text-sm">
                         <thead class="bg-slate-50 dark:bg-navy-800/50 text-slate-500 border-b border-slate-200 dark:border-navy-800">
-                            <tr><th class="p-4 font-medium">Stakeholder</th><th class="p-4 font-medium">Primary Concern</th><th class="p-4 font-medium">Engagement Action</th></tr>
+                            <tr><th class="p-6 font-medium">Stakeholder</th><th class="p-6 font-medium">Primary Concern</th><th class="p-6 font-medium">Engagement Action</th></tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-navy-800">
                             <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50 transition-colors" onclick="showEvidence('Union Message:\n\nFrame the transformation around redeployment, capability development and evidence-based workforce transition — not individual termination.')">
-                                <td class="p-4 font-bold text-accent-700 dark:text-accent-400">Workers' Union</td>
-                                <td class="p-4 text-slate-600 dark:text-slate-400 italic">"Consultants are mapping who gets cut."</td>
-                                <td class="p-4"><span class="bg-accent-100 text-accent-700 px-2 py-1 rounded text-xs font-semibold">Frame around Redeployment</span></td>
+                                <td class="p-6 font-bold text-accent-700 dark:text-accent-400">Workers' Union</td>
+                                <td class="p-6 text-slate-600 dark:text-slate-400 italic">"Consultants are mapping who gets cut."</td>
+                                <td class="p-6"><span class="bg-accent-100 text-accent-700 px-2 py-1 rounded text-xs font-semibold">Frame around Redeployment</span></td>
                             </tr>
                             <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50 transition-colors" onclick="nav('economics')">
-                                <td class="p-4 font-bold">Board of Directors</td>
-                                <td class="p-4 text-slate-600 dark:text-slate-400">Cost of transformation vs ROI.</td>
-                                <td class="p-4"><span class="bg-slate-100 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs">Present Scenario Economics</span></td>
+                                <td class="p-6 font-bold">Board of Directors</td>
+                                <td class="p-6 text-slate-600 dark:text-slate-400">Cost of transformation vs ROI.</td>
+                                <td class="p-6"><span class="bg-slate-100 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs">Present Scenario Economics</span></td>
                             </tr>
                             <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50 transition-colors">
-                                <td class="p-4 font-bold">Regional HR</td>
-                                <td class="p-4 text-slate-600 dark:text-slate-400">Accuracy of central data.</td>
-                                <td class="p-4"><span class="bg-slate-100 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs">Co-create Capability Pilots</span></td>
+                                <td class="p-6 font-bold">Regional HR</td>
+                                <td class="p-6 text-slate-600 dark:text-slate-400">Accuracy of central data.</td>
+                                <td class="p-6"><span class="bg-slate-100 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs">Co-create Capability Pilots</span></td>
                             </tr>
                             <tr class="cursor-pointer hover:bg-slate-50 dark:hover:bg-navy-800/50 transition-colors">
-                                <td class="p-4 font-bold">Ministry</td>
-                                <td class="p-4 text-slate-600 dark:text-slate-400">Social impact and disruption.</td>
-                                <td class="p-4"><span class="bg-slate-100 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs">Demonstrate Funnel</span></td>
+                                <td class="p-6 font-bold">Ministry</td>
+                                <td class="p-6 text-slate-600 dark:text-slate-400">Social impact and disruption.</td>
+                                <td class="p-6"><span class="bg-slate-100 dark:bg-navy-700 text-slate-700 dark:text-slate-300 px-2 py-1 rounded text-xs">Demonstrate Funnel</span></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 
-                <h3 class="font-bold text-lg mb-2 mt-8">Engagement Timeline</h3>
+                <h2 class="font-bold text-2xl mb-2 mt-8">Engagement Timeline</h2>
                 <div class="flex justify-between relative mt-4 pt-4 border-t border-slate-200 dark:border-navy-800">
                     <div class="text-center w-1/4"><div class="font-bold text-accent-600 mb-1">Day 30</div><div class="text-xs text-slate-500">Initial Briefing</div></div>
                     <div class="text-center w-1/4"><div class="font-bold mb-1">Day 45</div><div class="text-xs text-slate-500">Working Groups</div></div>
@@ -915,7 +917,7 @@
             <!-- SCREEN 13: DECISION CENTER -->
             <div id="view-decision" class="view-screen hidden max-w-4xl mx-auto space-y-6 fade-in">
                 <div class="mb-8">
-                    <h1 class="text-3xl font-bold mb-2">Decision Center</h1>
+                    <h1 class="text-4xl font-bold mb-2">Decision Center</h1>
                     <p class="text-slate-500 dark:text-slate-400">Pending executive approvals required to unblock milestones.</p>
                 </div>
                 
@@ -923,7 +925,7 @@
                     <!-- Dec 1 -->
                     <div class="bg-white dark:bg-navy-900 rounded-xl border-l-4 border-l-emerald-500 border-t border-r border-b border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col md:flex-row gap-6 justify-between items-start md:items-center hover:shadow-md transition">
                         <div>
-                            <h3 class="font-bold text-lg mb-1 cursor-pointer hover:text-accent-600" onclick="nav('plan')">1. Approve Field Metering redeployment pilot</h3>
+                            <h2 class="font-bold text-2xl mb-1 cursor-pointer hover:text-accent-600" onclick="nav('plan')">1. Approve Field Metering redeployment pilot</h2>
                             <p class="text-sm text-slate-500 mb-3">Initiate 1,250 employee cohort transition to Smart Meter Ops.</p>
                             <div class="flex gap-2">
                                 <span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded font-bold">REC: APPROVE</span>
@@ -936,7 +938,7 @@
                     <!-- Dec 2 -->
                     <div class="bg-white dark:bg-navy-900 rounded-xl border-l-4 border-l-accent-500 border-t border-r border-b border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col md:flex-row gap-6 justify-between items-start md:items-center hover:shadow-md transition">
                         <div>
-                            <h3 class="font-bold text-lg mb-1 cursor-pointer hover:text-accent-600" onclick="nav('capability')">2. Adopt capability architecture (Wave 1)</h3>
+                            <h2 class="font-bold text-2xl mb-1 cursor-pointer hover:text-accent-600" onclick="nav('capability')">2. Adopt capability architecture (Wave 1)</h2>
                             <p class="text-sm text-slate-500 mb-3">Collapse 400 titles into 12 capabilities for Field Ops.</p>
                             <div class="flex gap-2">
                                 <span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded font-bold">REC: APPROVE W/ VALIDATION</span>
@@ -948,7 +950,7 @@
                     <!-- Dec 3 -->
                     <div class="bg-white dark:bg-navy-900 rounded-xl border-l-4 border-l-amber-500 border-t border-r border-b border-slate-200 dark:border-navy-800 p-6 shadow-sm flex flex-col md:flex-row gap-6 justify-between items-start md:items-center hover:shadow-md transition">
                         <div>
-                            <h3 class="font-bold text-lg mb-1 cursor-pointer hover:text-accent-600" onclick="nav('economics')">3. Proceed without Payroll compensation data</h3>
+                            <h2 class="font-bold text-2xl mb-1 cursor-pointer hover:text-accent-600" onclick="nav('economics')">3. Proceed without Payroll compensation data</h2>
                             <p class="text-sm text-slate-500 mb-3">Ministry restriction prevents data access. Use scenario models instead.</p>
                             <div class="flex gap-2">
                                 <span class="bg-amber-100 text-amber-700 text-xs px-2 py-1 rounded font-bold uppercase">Rec: Proceed with Scenarios</span>
@@ -1159,17 +1161,17 @@ Estimated Capacity: 700 roles`,
             let timelineHtml = '<div class="absolute left-6 top-2 bottom-2 w-0.5 bg-slate-200 dark:bg-navy-700"></div>';
             p.phases.forEach((ph, idx) => {
                 const isLast = idx === p.phases.length - 1;
-                const dotBg = idx === 0 ? 'bg-indigo-500 shadow' : (ph.progress !== '0%' ? 'bg-slate-300 dark:bg-navy-600' : 'bg-slate-200 dark:bg-navy-700');
+                const dotBg = idx === 0 ? 'bg-blue-500 shadow' : (ph.progress !== '0%' ? 'bg-slate-300 dark:bg-navy-600' : 'bg-slate-200 dark:bg-navy-700');
                 const textCol = idx === 0 ? '' : (ph.progress === '0%' ? 'text-slate-400' : '');
                 
                 timelineHtml += `
                     <div class="relative pl-12 ${isLast ? '' : 'mb-10'}">
                         <div class="absolute left-0 top-1 w-5 h-5 rounded-full ${dotBg} border-4 border-white dark:border-navy-900"></div>
-                        <h4 class="font-bold text-lg mb-1 ${textCol}">${ph.title}</h4>
+                        <h2 class="font-bold text-2xl mb-1 ${textCol}">${ph.title}</h2>
                         <p class="text-sm text-slate-500 mb-3">${ph.desc}</p>
                         ${ph.progress !== '0%' ? `
-                        <div class="flex items-center gap-4">
-                            <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-indigo-500 h-2 rounded-full" style="width: ${ph.progress}"></div></div>
+                        <div class="flex items-center gap-6">
+                            <div class="w-full bg-slate-100 dark:bg-navy-800 rounded-full h-2"><div class="bg-blue-500 h-2 rounded-full" style="width: ${ph.progress}"></div></div>
                             <span class="text-xs font-bold text-slate-400">${ph.progress}</span>
                         </div>
                         ` : ''}
@@ -1182,8 +1184,8 @@ Estimated Capacity: 700 roles`,
         // Modals / Drawers
         function showEvidence(text, showBtn = false) {
             const content = document.getElementById('drawer-evidence-content');
-            let html = `<div class="bg-slate-50 dark:bg-navy-800 p-4 rounded-lg border border-slate-200 dark:border-navy-700 text-sm whitespace-pre-wrap leading-relaxed">${text}</div>`;
-            if(showBtn) html += `<button onclick="loadTransitionPlan(currentPathwayKey); nav('plan'); closeAllDrawers()" class="w-full mt-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold shadow-sm transition-colors text-sm">Add to Transition Plan</button>`;
+            let html = `<div class="bg-slate-50 dark:bg-navy-800 p-6 rounded-lg border border-slate-200 dark:border-navy-700 text-sm whitespace-pre-wrap leading-relaxed">${text}</div>`;
+            if(showBtn) html += `<button onclick="loadTransitionPlan(currentPathwayKey); nav('plan'); closeAllDrawers()" class="w-full mt-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-sm transition-colors text-sm">Add to Transition Plan</button>`;
             
             content.innerHTML = html;
             document.getElementById('global-overlay').classList.remove('hidden');
